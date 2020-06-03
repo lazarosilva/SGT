@@ -1,10 +1,16 @@
-FROM python:3.6
+FROM ubuntu:latest
 ENV PYTHONUNBUFFERED 1
+
+RUN apt-get update && apt-get upgrade -y && apt-get install -y \
+  && apt-get install -y libmysqlclient-dev \	
+  && apt-get install -y python3-pip python3-dev \
+  && cd /usr/local/bin \
+  && ln -s /usr/bin/python3 python \
+  && pip3 install --upgrade pip setuptools
+
 RUN mkdir /app
 WORKDIR /app
 # Installing OS Dependencies
-RUN apt-get update && apt-get upgrade -y && apt-get install -y default-mysql-client default-libmysqlclient-dev
-RUN pip install -U pip setuptools
 COPY requirements.txt /app/
 RUN pip install -r /app/requirements.txt
 ADD sgt/ /app/

@@ -8,12 +8,14 @@ services:
       - "8000:8000"
     depends_on:
       - db
+    networks:
+      - web-network
 
   db:
     image: mysql:5.7
-    command: mysqld --default-authentication-plugin=mysql_native_password
     volumes:
-      - "./mysql:/var/lib/mysql"
+      - dbdata:/var/lib/mysql/
+      - ./docker/mysql/my.cnf:/etc/mysql/my.cnf 
     ports:
       - "3306:3306"
     environment:
@@ -21,3 +23,14 @@ services:
       - MYSQL_USER=sgt_user_db
       - MYSQL_PASSWORD=53Rr1Nh@
       - MYSQL_ROOT_PASSWORD=M@r14Db!
+    networks:
+      - web-network
+
+#Docker Networks
+networks:
+  web-network:
+    driver: bridge
+#Volumes
+volumes:
+  dbdata:
+    driver: local

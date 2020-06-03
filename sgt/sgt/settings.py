@@ -80,10 +80,22 @@ DATABASES = {
         'NAME': 'SGT',
         'USER': 'sgt_user_db',
         'PASSWORD': '53Rr1Nh@',
-        'HOST': '127.0.0.1',
+        'HOST': 'db',
         'PORT': '3306',
     }
 }
+
+
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.mysql',
+#         'NAME': 'SGT',
+#         'USER': 'sgt_user_db',
+#         'PASSWORD': '53Rr1Nh@',
+#         'HOST': '127.0.0.1',
+#         'PORT': '3306',
+#     }
+# }
 
 
 # Password validation
