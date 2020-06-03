@@ -77,9 +77,9 @@ WSGI_APPLICATION = 'sgt.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'SGT_DB',
-        'USER': 'root',
-        'PASSWORD': '',
+        'NAME': 'SGT',
+        'USER': 'sgt_user_db',
+        'PASSWORD': '53Rr1Nh@',
         'HOST': '127.0.0.1',
         'PORT': '3306',
     }
