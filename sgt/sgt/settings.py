@@ -11,6 +11,8 @@ https://docs.djangoproject.com/en/3.0/ref/settings/
 """
 
 import os
+import mimetypes
+
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -80,7 +82,7 @@ DATABASES = {
         'NAME': 'SGT',
         'USER': 'sgt_user_db',
         'PASSWORD': '53Rr1Nh@',
-        'HOST': 'db',
+        'HOST': '127.0.0.1',
         'PORT': '3306',
     }
 }
@@ -136,3 +138,6 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'static')
+
+
+mimetypes.add_type("text/css", ".css", True)
