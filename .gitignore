@@ -7,3 +7,4 @@ __pycache__
 /mysql
 .DS_Store
 checklist.txt
+backup_models.py

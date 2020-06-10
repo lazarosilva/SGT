@@ -140,4 +140,4 @@ STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 
 
-mimetypes.add_type("text/css", ".css", True)
+LOGIN_REDIRECT_URL = '/'
