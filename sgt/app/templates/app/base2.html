@@ -203,7 +203,7 @@
                             </a>
                         </li>
                         <li>
-                            <a href="#">
+                            <a href="{% url 'discentes_list' %}">
                                 <i class="fa fa-folder"></i>
                                 <span class="menu-text">Discentes</span>
                             </a>
@@ -239,6 +239,7 @@
 
         <!-- using online scripts -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.10/jquery.mask.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.6/umd/popper.min.js"
         integrity="sha384-wHAiFfRlMFy6i5SRaxvfOCifBUQy1xHdJ/yoi7FRNXMRBu5WHdZYu1hA6ZOblgut" crossorigin="anonymous">
     </script>
@@ -255,96 +256,9 @@
 
 
     <script src="{% static 'js/main.js' %}"></script>
-<!--     <script type="text/javascript">
-    	jQuery(function ($) {
+    <script src="{% static 'js/principal.js' %}"></script>
 
-	    // Dropdown menu
-	    $(".sidebar-dropdown > a").click(function () {
-	        $(".sidebar-submenu").slideUp(200);
-	        if ($(this).parent().hasClass("active")) {
-	            $(".sidebar-dropdown").removeClass("active");
-	            $(this).parent().removeClass("active");
-	        } else {
-	            $(".sidebar-dropdown").removeClass("active");
-	            $(this).next(".sidebar-submenu").slideDown(200);
-	            $(this).parent().addClass("active");
-	        }
-
-	    });
-
-	    //toggle sidebar
-	    $("#toggle-sidebar").click(function () {
-	        $(".page-wrapper").toggleClass("toggled");
-	    });
-	    //Pin sidebar
-	    $("#pin-sidebar").click(function () {
-	        if ($(".page-wrapper").hasClass("pinned")) {
-	            // unpin sidebar when hovered
-	            $(".page-wrapper").removeClass("pinned");
-	            $("#sidebar").unbind( "hover");
-	        } else {
-	            $(".page-wrapper").addClass("pinned");
-	            $("#sidebar").hover(
-	                function () {
-	                    console.log("mouseenter");
-	                    $(".page-wrapper").addClass("sidebar-hovered");
-	                },
-	                function () {
-	                    console.log("mouseout");
-	                    $(".page-wrapper").removeClass("sidebar-hovered");
-	                }
-	            )
-
-	        }
-	    });
-
-
-	    //toggle sidebar overlay
-	    $("#overlay").click(function () {
-	        $(".page-wrapper").toggleClass("toggled");
-	    });
-
-	    //switch between themes 
-	    var themes = "default-theme legacy-theme chiller-theme ice-theme cool-theme light-theme";
-	    $('[data-theme]').click(function () {
-	        $('[data-theme]').removeClass("selected");
-	        $(this).addClass("selected");
-	        $('.page-wrapper').removeClass(themes);
-	        $('.page-wrapper').addClass($(this).attr('data-theme'));
-	    });
-
-	    // switch between background images
-	    var bgs = "bg1 bg2 bg3 bg4";
-	    $('[data-bg]').click(function () {
-	        $('[data-bg]').removeClass("selected");
-	        $(this).addClass("selected");
-	        $('.page-wrapper').removeClass(bgs);
-	        $('.page-wrapper').addClass($(this).attr('data-bg'));
-	    });
-
-	    // toggle background image
-	    $("#toggle-bg").change(function (e) {
-	        e.preventDefault();
-	        $('.page-wrapper').toggleClass("sidebar-bg");
-	    });
-
-	    // toggle border radius
-	    $("#toggle-border-radius").change(function (e) {
-	        e.preventDefault();
-	        $('.page-wrapper').toggleClass("border-radius-on");
-	    });
-
-	    //custom scroll bar is only used on desktop
-	    if (!/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
-	        $(".sidebar-content").mCustomScrollbar({
-	            axis: "y",
-	            autoHideScrollbar: true,
-	            scrollInertia: 300
-	        });
-	        $(".sidebar-content").addClass("desktop");
-
-	    }
-	});
-    </script> -->
+    {% block js %}
+    {% endblock %}
 </body>
 </html>

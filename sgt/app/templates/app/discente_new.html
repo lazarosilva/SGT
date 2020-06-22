@@ -1,0 +1,258 @@
+y{% extends 'app/base2.html' %}
+
+{% load crispy_forms_tags %}
+
+{% block content %}
+	<h2>Novo Discente</h2>
+
+    <form method="POST">
+    	{% csrf_token %}
+    	<hr>
+			<h3>Geral</h3>
+            <div class="row">
+                <div class="col-8">
+                  {{ form.nome|as_crispy_field }}
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-4">
+                    {{ form.data_nascimento|as_crispy_field }}
+                </div>
+                <div class="col-2">
+                  {{ form.genero|as_crispy_field }}
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-4">
+                    {{ form.natural_de|as_crispy_field }}
+                </div>
+                <div class="col-2">
+                    {{ form.mora_em_serrinha|as_crispy_field }}
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-6">
+                  {{ form.curso|as_crispy_field }}
+                </div>
+                <div class="col-2">
+                    {{ form.coeficiente_de_rendimento|as_crispy_field }}
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-4">
+                  {{ form.matricula|as_crispy_field }}
+                </div>
+                <div class="col-2">
+                    {{ form.ano_ingresso|as_crispy_field }}
+                </div>    
+                 <div class="col-2">
+                    {{ form.semestre_atual|as_crispy_field }}
+                </div> 
+            </div>    
+        <div class="row">
+        </div>
+        <hr>
+            <h3>Socioeconômico</h3>
+            <div class="row">
+                <div class="col-2">
+                    {{ form.trabalha|as_crispy_field }}
+                </div>
+                 <div id="divTurnoTrabalho" class="col-2">
+                    {{ form.turno_trabalho|as_crispy_field }}
+                </div>
+                <div class="col-4">
+                    {{ form.renda_familiar|as_crispy_field }}   
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-4">
+                    {{ form.tipo_escola_ens_medio|as_crispy_field }}   
+                </div>
+                <div class="col-4">
+                    {{ form.tempo_sem_estudar|as_crispy_field }}   
+                </div>
+            </div>
+            <div class="row">
+
+<!--                 <small id="help_renda_familiar" class="form-text text-muted">Informe a renda aproximada da família, em salários mínimos.</small> -->
+            </div>
+        <hr>
+            <h3>Expectativas</h3>
+            <div class="row">
+                <div class="col-4">
+                    {{ form.motivo_escolha_curso|as_crispy_field}}
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-8">
+                    {{ form.outro_motivo|as_crispy_field}}                    
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-8">
+                    {{ form.expectativas_curso|as_crispy_field }}   
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-8">
+                    {{ form.sub_areas_interesse|as_crispy_field }}   
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-4">
+                    {{ form.plano_egresso|as_crispy_field}}
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-8">
+                    {{ form.outro_plano|as_crispy_field}}
+                </div>
+            </div>
+            <div class="row">
+            </div>
+        <hr>
+            <h3>Experiências e Dificuldades</h3>
+            <div class="row">
+                <div class="col-4">
+                    {{ form.fez_curso_tecnico|as_crispy_field}}
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-4">
+                    {{ form.nome_curso_tecnico|as_crispy_field}}
+                </div>
+                <div class="col-4">
+                    {{ form.local_curso_tecnico|as_crispy_field}}
+                </div>
+            </div> 
+            <div class="row">
+                <div class="col-4">
+                    {{ form.fez_outra_graduacao|as_crispy_field}}
+                </div>
+            </div>   
+            <div class="row">
+                <div class="col-4">
+                    {{ form.nome_graduacao|as_crispy_field}}
+                </div>
+                <div class="col-4">
+                    {{ form.local_graduacao|as_crispy_field}}
+                </div>
+            </div>
+            <div class="row">
+                 <div class="col-4">
+                    {{ form.participou_extensao|as_crispy_field}}
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-8">
+                    {{ form.projetos_extensao|as_crispy_field}}
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-4">
+                    {{ form.participou_pesquisa|as_crispy_field}}
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-8">
+                    {{ form.projetos_pesquisa|as_crispy_field}}
+                </div>
+            </div>
+        <button type="submit" class="btn btn-success">Salvar</button>
+    </form>
+{% endblock %}
+
+{% block js %}
+    <script type="text/javascript">
+        $("#id_trabalha").change(function(){
+            if($("#id_trabalha").val() == 'S'){
+                $("#id_turno_trabalho").prop("disabled", false);
+            } else{
+                $("#id_turno_trabalho").prop("disabled", true);
+                $("#id_turno_trabalho").val("");
+            }
+        });
+
+        if($("#id_trabalha").attr("selected-option") == 'S'){
+            $("#id_trabalha").val($("#id_trabalha").attr("selected-option"));
+        }
+
+        $("#id_fez_curso_tecnico").change(function(){
+            if($("#id_fez_curso_tecnico").val() == 'S'){
+                $("#id_nome_curso_tecnico").prop("disabled", false);
+                $("#id_local_curso_tecnico").prop("disabled", false);
+            } else{
+                $("#id_nome_curso_tecnico").prop("disabled", true);
+                $("#id_nome_curso_tecnico").val("");
+                $("#id_local_curso_tecnico").prop("disabled", true);
+                $("#id_local_curso_tecnico").val("");
+            }
+        });
+
+        if($("#id_fez_curso_tecnico").attr("selected-option") == 'S'){
+            $("#id_fez_curso_tecnico").val($("#id_fez_curso_tecnico").attr("selected-option"));
+        }
+
+        $("#id_fez_outra_graduacao").change(function(){
+            if($("#id_fez_outra_graduacao").val() == 'S'){
+                $("#id_nome_graduacao").prop("disabled", false);
+                $("#id_local_graduacao").prop("disabled", false);
+            } else{
+                $("#id_nome_graduacao").prop("disabled", true);
+                $("#id_nome_graduacao").val("");
+                $("#id_local_graduacao").prop("disabled", true);
+                $("#id_local_graduacao").val("");
+            }
+        });
+
+        if($("#id_fez_outra_graduacao").attr("selected-option") == 'S'){
+            $("#id_fez_outra_graduacao").val($("#id_fez_outra_graduacao").attr("selected-option"));
+        }
+
+        $("#id_participou_extensao").change(function(){
+            if($("#id_participou_extensao").val() == 'S'){
+                $("#id_projetos_extensao").prop("disabled", false);
+            } else{
+                $("#id_projetos_extensao").prop("disabled", true);
+                $("#id_projetos_extensao").val("");
+            }
+        });
+
+
+        if($("#id_participou_pesquisa").attr("selected-option") == 'S'){
+            $("#id_participou_pesquisa").val($("#id_participou_pesquisa").attr("selected-option"));
+        }
+        
+        $("#id_motivo_escolha_curso").change(function(){
+            if($("#id_motivo_escolha_curso").val() == 'O'){
+                $("#id_outro_motivo").prop("disabled", false);
+            } else{
+                $("#id_outro_motivo").prop("disabled", true);
+                $("#id_outro_motivo").val("");
+            }
+        });
+
+        $("#id_plano_egresso").change(function(){
+            if($("#id_plano_egresso").val() == 'O'){
+                $("#id_outro_plano").prop("disabled", false);
+            } else{
+                $("#id_outro_plano").prop("disabled", true);
+                $("#id_outro_plano").val("");
+            }
+        });
+
+        if($("#id_participou_extensao").attr("selected-option") == 'S'){
+            $("#id_participou_extensao").val($("#id_participou_extensao").attr("selected-option"));
+        }
+
+        $("#id_participou_pesquisa").change(function(){
+            if($("#id_participou_pesquisa").val() == 'S'){
+                $("#id_projetos_pesquisa").prop("disabled", false);
+            } else{
+                $("#id_projetos_pesquisa").prop("disabled", true);
+                $("#id_projetos_pesquisa").val("");
+            }
+        });
+
+    </script>
+{% endblock %}

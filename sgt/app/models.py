@@ -48,34 +48,37 @@ class Discente(models.Model):
     #caracterização inicial
     id = models.AutoField(db_column='ID', primary_key=True)  # Field name made lowercase.
     nome = models.CharField(db_column='Nome', max_length=200)  # Field name made lowercase.
-    nomesocial = models.CharField(db_column='NomeSocial', max_length=200, blank=True, null=True)  # Field name made lowercase.
-    datanascimento = models.DateField(db_column='DataNascimento')  # Field name made lowercase.
-    gênero = models.CharField(db_column='Gênero', max_length=1)  # Field name made lowercase.
-    anoingresso = models.IntegerField(db_column='AnoIngresso')  # Field name made lowercase.
-    cidadeorigem = models.CharField(db_column='CidadeOrigem', max_length=100)  # Field name made lowercase.
-    moraemserrinha = models.IntegerField(db_column='MoraEmSerrinha')  # Field name made lowercase.
-    coeficienterendimento = models.FloatField(db_column='CoeficienteRendimento')  # Field name made lowercase.
-    semestreatual = models.IntegerField(db_column='SemestreAtual')  # Field name made lowercase.
+    nome_social = models.CharField(db_column='NomeSocial', max_length=200, blank=True, null=True)  # Field name made lowercase.
+    data_nascimento = models.DateField(db_column='DataNascimento')  # Field name made lowercase.
+    genero = models.CharField(db_column='Gênero', max_length=1)  # Field name made lowercase.
+    ano_ingresso = models.IntegerField(db_column='AnoIngresso')  # Field name made lowercase.
+    natural_de = models.CharField(db_column='CidadeOrigem', max_length=100)  # Field name made lowercase.
+    mora_em_serrinha = models.BooleanField(db_column='MoraEmSerrinha', default=True)  # Field name made lowercase.
+    coeficiente_de_rendimento = models.FloatField(db_column='CoeficienteRendimento', blank=True, null=True)  # Field name made lowercase.
+    semestre_atual = models.IntegerField(db_column='SemestreAtual', blank=True, null=True)  # Field name made lowercase.
     curso = models.ForeignKey(Curso, models.DO_NOTHING, db_column='CursoID')  # Field name made lowercase.
     matricula = models.IntegerField(db_column='Matricula')  # Field name made lowercase.
     #caracterização socioeconomica
-    turnotrabalho = models.CharField(db_column='TurnoTrabalho', max_length=10, blank=True, null=True)  # Field name made lowercase.
-    rendafamiliar = models.CharField(db_column='RendaFamiliar', max_length=10)  # Field name made lowercase.
-    temposemestudar = models.IntegerField(db_column='TempoSemEstudar', blank=True, null=True)  # Field name made lowercase.
-    tipoescolaensmedio = models.CharField(db_column='TipoEscolaEnsMedio', max_length=20)  # Field name made lowercase.
+    turno_trabalho = models.CharField(db_column='TurnoTrabalho', max_length=10, blank=True, null=True)  # Field name made lowercase.
+    renda_familiar = models.FloatField(db_column='RendaFamiliar', max_length=10, blank=True, null=True)  # Field name made lowercase.
+    tempo_sem_estudar = models.IntegerField(db_column='TempoSemEstudar', blank=True, null=True)  # Field name made lowercase.
+    tipo_escola_ens_medio = models.CharField(db_column='TipoEscolaEnsMedio', max_length=20, blank=True, null=True)  # Field name made lowercase.
     #caracterização expectativas
-    motivoescolhacurso = models.CharField(db_column='MotivoEscolhaCurso', max_length=200)  # Field name made lowercase.
-    expectativascurso = models.TextField(db_column='ExpectativasCurso')  # Field name made lowercase.
-    subareasinteresse = models.TextField(db_column='SubAreasInteresse')  # Field name made lowercase.
-    planoegresso = models.TextField(db_column='PlanoEgresso')  # Field name made lowercase.
+    motivo_escolha_curso = models.CharField(db_column='MotivoEscolhaCurso', max_length=200, blank=True, null=True)  # Field name made lowercase.
+    # outro_motivo = models.CharField(db_column='OutroMotivoEscolhaCurso', max_length=200, blank=True, null=True)  # Field name made lowercase. 
+    expectativas_curso = models.TextField(db_column='ExpectativasCurso', blank=True, null=True)  # Field name made lowercase.
+    sub_areas_interesse = models.TextField(db_column='SubAreasInteresse', blank=True, null=True)  # Field name made lowercase.
+    plano_egresso = models.CharField(db_column='PlanoEgresso', max_length=200, blank=True, null=True)  # Field name made lowercase.
+    # outro_plano = models.CharField(db_column='OutroPlanoEgresso', max_length=200, blank=True, null=True)  # Field name made lowercase.
     #caracterização experiências e dificuldades
-    nomecursotecnico = models.CharField(db_column='NomeCursoTecnico', max_length=200, blank=True, null=True)  # Field name made lowercase.
-    localcursotecnico = models.CharField(db_column='LocalCursoTecnico', max_length=200, blank=True, null=True)  # Field name made lowercase.
-    nomegraduacao = models.CharField(db_column='NomeGraduacao', max_length=200, blank=True, null=True)  # Field name made lowercase.
-    localgraduacao = models.CharField(db_column='LocalGraduacao', max_length=200, blank=True, null=True)  # Field name made lowercase.
-    projetoextensao = models.TextField(db_column='ProjetoExtensao', blank=True, null=True)  # Field name made lowercase.
-    dificuldadesensmedio = models.TextField(db_column='DificuldadesEnsMedio', blank=True, null=True)  # Field name made lowercase.
-    dificuldadescurso = models.TextField(db_column='DificuldadesCurso', blank=True, null=True)  # Field name made lowercase.
+    nome_curso_tecnico = models.CharField(db_column='NomeCursoTecnico', max_length=200, blank=True, null=True)  # Field name made lowercase.
+    local_curso_tecnico = models.CharField(db_column='LocalCursoTecnico', max_length=200, blank=True, null=True)  # Field name made lowercase.
+    nome_graduacao = models.CharField(db_column='NomeGraduacao', max_length=200, blank=True, null=True)  # Field name made lowercase.
+    local_graduacao = models.CharField(db_column='LocalGraduacao', max_length=200, blank=True, null=True)  # Field name made lowercase.
+    projetos_extensao = models.TextField(db_column='ProjetoExtensao', blank=True, null=True)  # Field name made lowercase.
+    projetos_pesquisa = models.TextField(db_column='ProjetoPesquisa', blank=True, null=True)  # Field name made lowercase.
+    dificuldades_ensino_medio = models.TextField(db_column='DificuldadesEnsMedio', blank=True, null=True)  # Field name made lowercase.
+    dificuldades_curso = models.TextField(db_column='DificuldadesCurso', blank=True, null=True)  # Field name made lowercase.
 
     def __str__(self):
         return self.nome

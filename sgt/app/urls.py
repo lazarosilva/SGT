@@ -10,4 +10,7 @@ urlpatterns = [
 	path('docentes/', views.docentes_list, name='docentes_list'),
 	path('docente/new/', views.docente_new, name='docente_new'),
 	path('docente/<int:pk>/edit/', views.docente_edit, name='docente_edit'),
+	path('discentes/', views.discentes_list, name='discentes_list'),
+	path('discente/new/', views.discente_new, name='discente_new'),
+	path('discente/<int:pk>/edit/', views.discente_edit, name='discente_edit'),
 ]

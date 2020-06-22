@@ -87,3 +87,20 @@ jQuery(function ($) {
 
     }
 });
+// function mostrarDivTurnoTrabalho(chave){
+//     if(chave){
+//         document.getElementById('divTurnoTrabalho').style.display = '';
+//     }else{
+//          document.getElementById('divTurnoTrabalho').style.display = none;
+//     }
+    
+// }
+
+//$("#id_trabalha").change(function(){
+    // mostrarDivTurnoTrabalho($("#id_trabalha").val());
+    // if($("#id_trabalha").val()){
+    //     $("#divTurnoTrabalho").show();
+    // } else{
+    //     $("#divTurnoTrabalho").hide();
+    // }
+//});  
