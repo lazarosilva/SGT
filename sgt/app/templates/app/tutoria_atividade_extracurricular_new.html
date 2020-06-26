@@ -1,0 +1,26 @@
+{% extends 'app/base2.html' %}
+
+{% load crispy_forms_tags %}
+
+{% block content %}
+	<h2>Nova AEC</h2>
+    <form method="POST">
+    	{% csrf_token %}
+		<hr>
+        <div class="row">
+            <div class="col-8">
+            	{{ form.descricao|as_crispy_field }}
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-4">
+                {{ form.tipo|as_crispy_field }}
+            </div>
+            <div class="col-4">
+                {{ form.bolsista|as_crispy_field }}
+            </div>
+        </div>
+        
+        <button type="submit" class="btn btn-success">Salvar</button>
+    </form>
+{% endblock %}

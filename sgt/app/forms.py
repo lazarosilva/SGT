@@ -1,5 +1,5 @@
 from django import forms
-from .models import Curso, Disciplina, Docente, Discente
+from .models import Curso, Disciplina, Docente, Discente, Tutoria, Atividadecomplementar, Estagioextracurricular, Atividadeextracurricular
 from django.core.validators import MaxValueValidator, MinValueValidator 
 
 class DateInput(forms.DateInput):
@@ -12,6 +12,83 @@ class DisciplinaForm(forms.ModelForm):
 		model = Disciplina
 		fields = '__all__'
 
+class EstagioExtraCurricularForm(forms.ModelForm):
+	
+	YES_OR_NO=[(None,'--------'), (True, 'Sim'), (False, 'Não')]
+
+	descricao = forms.CharField(max_length=200, label='Descrição')
+	carga_horaria = forms.IntegerField(label='Carga Horária')
+	carga_horaria.widget.attrs.update({'class': 'hideArrows'})
+	data_inicio = forms.DateField(label='Início')
+	data_inicio.widget.attrs.update({'data-mask': '00/00/0000'})
+	data_fim = forms.DateField(label='Término', required=False)
+	data_fim.widget.attrs.update({'data-mask': '00/00/0000'})
+	remunerado = forms.ChoiceField(label='Remunerado?', choices=YES_OR_NO, widget=forms.Select)
+
+	class Meta:
+		model = Estagioextracurricular
+		fields = ('descricao', 'remunerado', 'carga_horaria', 'data_inicio', 'data_fim')
+
+class AtividadeComplementarForm(forms.ModelForm):
+
+	descricao = forms.CharField(max_length=200, label='Descrição')
+	carga_horaria = forms.IntegerField(label='Carga Horária')
+	carga_horaria.widget.attrs.update({'class': 'hideArrows'})
+
+	class Meta:
+		model = Atividadecomplementar
+		fields = ('descricao', 'carga_horaria')
+
+
+class AtividadeExtraCurricularForm(forms.ModelForm):
+
+	TIPO_ATIVIDADE_EC=[(None,'--------'),('ENS','Ensino'), ('PES','Pesquisa'), ('EXT', 'Extensão')]
+	YES_OR_NO=[(None,'--------'), (True, 'Sim'), (False, 'Não')]
+
+	descricao = forms.CharField(max_length=200, label='Descrição')
+	tipo = forms.ChoiceField(label='Tipo de Atividade', choices=TIPO_ATIVIDADE_EC, widget=forms.Select)
+	bolsista = forms.ChoiceField(label='Bolsista?', choices=YES_OR_NO, widget=forms.Select)
+
+	class Meta:
+		model = Atividadeextracurricular
+		fields = ('descricao', 'tipo', 'bolsista')
+
+class TutoriaForm(forms.ModelForm):
+
+	NO_OR_YES=[('N', 'Não'),('S', 'Sim')]
+
+	# docente = forms.CharField(max_length=200)
+	# docente.widget.attrs.update({'disabled': 'disabled'})
+	legislacoes_ifbaiano = forms.CharField(label='Você conhece legislações e documentos referentes ao seu curso e ao IF Baiano? Quais?', required=False, widget=forms.Textarea(attrs={'rows': 5}))
+	dificuldades_semestre_atual = forms.CharField(label='Quais disciplinas do semestre atual que você está tendo maior dificuldade? Porque?',
+     required=False, widget=forms.Textarea(attrs={'rows': 5}))
+	acoes = forms.CharField(label='Quais ações você acha que poderiam ajudar nessas disciplinas?', 
+     required=False, widget=forms.Textarea(attrs={'rows': 5}))
+	sugestoes_dif_semestre = forms.CharField(label='Sugestão(ões) do(a) Tutor(a) para melhorar o rendimento nas disciplinas com dificuldade:',
+     required=False, widget=forms.Textarea(attrs={'rows': 5}))
+	dificuldades_curso = forms.CharField(label='Qual(is) outra(as) dificuldades você tem enfrentado durante o curso?',
+     required=False, widget=forms.Textarea(attrs={'rows': 5}))
+	sugestoes_dif_curso = forms.CharField(label='Sugestão(ões) do(a) Tutor(a) para o enfrentamento dessas dificuldades:', 
+     required=False, widget=forms.Textarea(attrs={'rows': 5}))
+	observacoes = forms.CharField(label='Outras observações do(a) Tutor(a):',
+     required=False, widget=forms.Textarea(attrs={'rows': 5}))
+	status = forms.ChoiceField(label='Deseja finalizar a tutoria?',
+     choices=NO_OR_YES, widget=forms.Select, required=False)
+	# docente = forms.ChoiceField(required=False, widget=forms.Select)
+
+	class Meta:
+		model = Tutoria
+		fields = ('docente', 'discente', 'legislacoes_ifbaiano', 'dificuldades_semestre_atual', 'acoes',
+			'sugestoes_dif_semestre', 'dificuldades_curso', 'sugestoes_dif_curso', 'observacoes', 'status')
+
+	def __init__(self, *args, **kwargs):
+		self.doc = kwargs.pop('doc')
+		super(TutoriaForm, self).__init__(*args, **kwargs)
+		# self.fields['docente'].initial = self.doc[0].nome
+		# if self.ppp == 'add' or self.ppp == 'upd_n':
+		self.fields['docente'].required = False
+		self.fields['docente'].widget.attrs.update({'selected-option': self.doc[0].id})
+ 
 
 class DocenteForm(forms.ModelForm):
 	# curso = forms.ModelChoiceField(queryset=Curso.objects.all())
@@ -169,6 +246,7 @@ class DiscenteForm(forms.ModelForm):
 			self.fields['projetos_extensao'].widget.attrs.update({'disabled': 'disabled'})
 		elif self.ppe == 'upd_y':
 			self.fields['participou_extensao'].widget.attrs.update({'selected-option': 'S'})
-	   
+
+
 
 

@@ -1,0 +1,77 @@
+{% extends 'app/base2.html' %}
+
+{% load crispy_forms_tags %}
+
+{% block content %}
+<h2>Nova Tutoria</h2>
+<form method="POST">
+    	{% csrf_token %}
+    	<hr>
+    	 <div class="row">
+            <div class="col-8">
+              {{ form.docente|as_crispy_field }}
+            </div>
+        </div>
+    	<div class="row">
+            <div class="col-8">
+              {{ form.discente|as_crispy_field }}
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-8">
+                {{ form.legislacoes_ifbaiano|as_crispy_field }}
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-8">
+                {{ form.dificuldades_semestre_atual|as_crispy_field }}
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-8">
+              {{ form.acoes|as_crispy_field }}
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-8">
+              {{ form.sugestoes_dif_semestre|as_crispy_field }}
+            </div> 
+        </div>    
+        <div class="row">
+            <div class="col-8">
+                {{ form.dificuldades_curso|as_crispy_field }}
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-8">
+                {{ form.sugestoes_dif_curso|as_crispy_field }}   
+            </div>
+        </div>
+        <div class="row">
+        </div>
+        <div class="row">
+            <div class="col-8">
+                {{ form.observacoes|as_crispy_field}}
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-8">
+                {{ form.status|as_crispy_field}}                    
+            </div>
+        </div>
+           
+        <button type="submit" class="btn btn-success">Salvar</button>
+    </form>
+{% endblock %}
+
+{% block js %}
+	 <script type="text/javascript">
+	 	//remover required, selecionar discente pelo user e desabilitar o campo
+	 	//$("id_docente").removeAttr("required");
+	 	if($("#id_docente").attr("selected-option") !== ""){
+            $("#id_docente").val($("#id_docente").attr("selected-option"));
+        }
+        $("#id_docente").prop("disabled", true);
+
+	 </script>
+{% endblock %}

@@ -1,0 +1,48 @@
+{% extends 'app/base2.html' %}
+
+{% block content %}
+    <div class="row">
+        <div class="form-group col-md-12">
+            <h2>Tutorias</h2>
+        </div>
+    </div>
+    <hr>
+    <div class="row table-responsive">
+        <table class="table table-borderless table-hover">
+            <thead class="thead-light">
+              <th scope="col">Discente</th>
+              <th scope="col">Matrícula</th>
+              <th scope="col"></th>
+              <th scope="col"></th>
+              <th scope="col"></th>
+              <th scope="col"></th>
+            </thead>
+            <tbody>
+              {% for tut in tutorias %}
+                <tr>
+                  <td>{{ tut.discente.nome }}</td>
+                  <td>{{ tut.discente.matricula }}</td>
+                  
+                  <!-- buttons -->
+                  <td><a href="{% url 'tutoria_edit' pk=tut.pk %}">Editar</a></td>
+                  <td><a href="{% url 'tutoria_estagios_list' pk=tut.pk %}" data-toggle="tooltip" title="Estágios Extracurriculares">EECs</a></td>
+                  <td><a href="{% url 'tutoria_atividades_extracurriculares_list' pk=tut.pk %}" data-toggle="tooltip" title="Atividades Extracurriculares">AECs</a></td>
+                  <td><a href="{% url 'tutoria_atividades_complementares_list' pk=tut.pk %}" data-toggle="tooltip" title="Atividades Complementares">ACs</a></td>
+                </tr>
+              {% endfor %}        
+            </tbody>
+        </table>
+    </div> 
+
+    <div class="row add-table">
+      <a href="{% url 'tutoria_new' %}" class="top-menu"><span class="glyphicon glyphicon-plus">Adicionar Tutoria</span></a>
+    </div> 
+{% endblock %}
+
+{% block js %}
+<script type="text/javascript">
+  $(document).ready(function(){
+    $('[data-toggle="tooltip"]').tooltip();
+  });
+</script>
+{% endblock %}

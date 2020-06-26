@@ -183,29 +183,38 @@
                         <li class="header-menu">
                             <span>Gerenciar</span>
                         </li>
-                        <li>
-                            <a href="{% url 'cursos_list' %}">
-                                <i class="fa fa-book"></i>
-                                <span class="menu-text">Cursos</span>
-                                <!-- <span class="badge badge-pill badge-primary">Beta</span> -->
-                            </a>
-                        </li>
-                        <li>
-                            <a href="{% url 'disciplinas_list' %}">
-                                <i class="fa fa-calendar"></i>
-                                <span class="menu-text">Disciplinas</span>
-                            </a>
-                        </li>
-                        <li>
-                            <a href="{% url 'docentes_list' %}">
-                                <i class="fa fa-folder"></i>
-                                <span class="menu-text">Docentes</span>
-                            </a>
-                        </li>
+
+                        {% ifequal user.groups.all.0.name "Coordenador" %}
+                            <li>
+                                <a href="{% url 'cursos_list' %}">
+                                    <i class="fa fa-book"></i>
+                                    <span class="menu-text">Cursos</span>
+                                    <!-- <span class="badge badge-pill badge-primary">Beta</span> -->
+                                </a>
+                            </li>
+                            <li>
+                                <a href="{% url 'disciplinas_list' %}">
+                                    <i class="fa fa-calendar"></i>
+                                    <span class="menu-text">Disciplinas</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="{% url 'docentes_list' %}">
+                                    <i class="fa fa-folder"></i>
+                                    <span class="menu-text">Docentes</span>
+                                </a>
+                            </li>
+                        {% endifequal %}
                         <li>
                             <a href="{% url 'discentes_list' %}">
                                 <i class="fa fa-folder"></i>
                                 <span class="menu-text">Discentes</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="{% url 'tutorias_list' %}">
+                                <i class="fa fa-folder"></i>
+                                <span class="menu-text">Tutorias</span>
                             </a>
                         </li>
                     </ul>

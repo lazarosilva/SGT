@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
-from .models import Curso, Disciplina, Docente, Discente
-from .forms import DisciplinaForm, DocenteForm, DiscenteForm
+from .models import Curso, Disciplina, Docente, Discente, Tutoria, Estagioextracurricular, Atividadecomplementar, Atividadeextracurricular, Estagioextracurricular
+from .forms import DisciplinaForm, DocenteForm, DiscenteForm, TutoriaForm, AtividadeExtraCurricularForm, AtividadeComplementarForm, EstagioExtraCurricularForm
 from django.contrib.auth.models import User, Group
 
 
@@ -10,6 +10,8 @@ from django.contrib.auth.models import User, Group
 def index(request):
 	return render(request, 'app/index.html')
 
+######################################## CURSOS #############################################
+
 @login_required
 def cursos_list(request):
 	cursos = Curso.objects.all()
@@ -17,6 +19,8 @@ def cursos_list(request):
 		'cursos': cursos
 	}
 	return render(request, 'app/cursos_list.html', context)
+
+########################################## DISCIPLINAS #######################################
 
 @login_required
 def disciplinas_list(request):
@@ -50,6 +54,8 @@ def disciplina_edit(request, pk):
 		form = DisciplinaForm(instance=disciplina)
 	return render(request, 'app/disciplina_new.html', {'form': form})
 
+
+########################################## DOCENTES ###########################################
 @login_required
 def docentes_list(request):
 	docentes = Docente.objects.select_related('curso').all()
@@ -58,7 +64,6 @@ def docentes_list(request):
 		'docentes': docentes
 	}
 	return render(request, 'app/docentes_list.html', context)
-
 
 @login_required
 def docente_new(request):
@@ -92,6 +97,8 @@ def docente_edit(request, pk):
 		form = DocenteForm(instance=docente)
 	return render(request, 'app/docente_new.html', {'form': form})
 
+############################################ DISCENTES ########################################
+
 @login_required
 def discentes_list(request):
 	discentes = Discente.objects.select_related('curso').all()
@@ -103,7 +110,6 @@ def discentes_list(request):
 
 @login_required
 def discente_new(request):
-
 	if (request.method == 'POST'):
 		mthd = 'p'
 		form = DiscenteForm(request.POST, mthd=mthd, tt='add', om='', op='', fct='add', fog='add', ppe='add', ppp='add')
@@ -150,13 +156,6 @@ def discente_edit(request, pk):
 	else:
 		mthd = 'g'
 
-		print('discente.motivo_escolha_curso:', discente.motivo_escolha_curso)
-		print('discente.plano_egresso:', discente.plano_egresso)
-		print('discente.nome_curso_tecnico:', discente.nome_curso_tecnico)
-		print('discente.local_curso_tecnico:', discente.local_curso_tecnico)
-		print('discente.local_graduacao:', discente.local_graduacao)
-		print('discente.nome_graduacao:', discente.nome_graduacao) 
-
 		if((discente.nome_curso_tecnico is not None) and
 		 (discente.local_curso_tecnico is not None) and
 		 (discente.nome_curso_tecnico != '') and
@@ -190,7 +189,6 @@ def discente_edit(request, pk):
 				(discente.motivo_escolha_curso != 'N') and
 				(discente.motivo_escolha_curso != 'J')):
 				om = discente.motivo_escolha_curso
-				print('om:', om)
 				discente.motivo_escolha_curso = 'O'
 
 		if ((discente.plano_egresso is not None) and
@@ -208,6 +206,163 @@ def discente_edit(request, pk):
 		form = DiscenteForm(instance=discente, mthd=mthd, tt=tt, om=om, op=op, fct=fct, fog=fog, ppe=ppe, ppp=ppp)
 
 	return render(request, 'app/discente_new.html', {'form': form})
+
+################################## TUTORIAS ####################################
+
+@login_required
+def tutorias_list(request):
+	tutorias = Tutoria.objects.select_related('discente').all()
+
+	context = {
+		'tutorias': tutorias
+	}
+	return render(request, 'app/tutorias_list.html', context)
+
+@login_required
+def tutoria_new(request):
+	doc = Docente.objects.filter(email__exact=request.user.email)
+	if (request.method == 'POST'):
+		form = TutoriaForm(request.POST, doc=doc)
+		if (form.is_valid()):
+			tutoria = form.save(commit=False)
+			tutoria.docente = doc[0]
+			tutoria.save()
+			return redirect('tutorias_list')
+	else:
+		form = TutoriaForm(doc=doc)
+	return render(request, 'app/tutoria_new.html', {'form':form})
+
+@login_required
+def tutoria_edit(request, pk):
+	doc = Docente.objects.filter(email__exact=request.user.email)
+	tutoria = get_object_or_404(Tutoria, pk=pk)	
+	if (request.method == 'POST'):
+		form = TutoriaForm(request.POST, instance=tutoria, doc=doc)
+		if (form.is_valid()):
+			tutoria = form.save(commit=False)
+			tutoria.docente = doc[0]
+			tutoria.save()
+			return redirect('tutorias_list')
+	else:
+		form = TutoriaForm(instance=tutoria, doc=doc)
+	return render(request, 'app/tutoria_new.html', {'form': form})
+
+################################## ESTÁGIOS EXTRACURRICULARES ################################
+@login_required
+def tutoria_estagios_list(request, pk):
+	tutoria = get_object_or_404(Tutoria, pk=pk)
+
+	estagios = Estagioextracurricular.objects.filter(tutoria=tutoria.id)
+	context = {
+		'estagios': estagios,
+		'tutoria': tutoria
+	}
+	return render(request, 'app/tutoria_estagios_list.html', context)
+
+@login_required
+def tutoria_estagio_new(request, pk):
+	tutoria = get_object_or_404(Tutoria, pk=pk)
+	if (request.method == 'POST'):
+		form = EstagioExtraCurricularForm(request.POST)
+		if (form.is_valid()):
+			est = form.save(commit=False)
+			est.tutoria = tutoria
+			est.save()
+			return redirect('tutoria_estagios_list', pk=pk)
+	else:
+		form = EstagioExtraCurricularForm()
+	return render(request, 'app/tutoria_estagio_new.html', {'form':form})
+
+@login_required
+def tutoria_estagio_edit(request, pk, pk_1):
+	tutoria = get_object_or_404(Tutoria, pk=pk)
+	estagio = get_object_or_404(Estagioextracurricular, pk=pk_1)
+	if (request.method == 'POST'):
+		form = EstagioExtraCurricularForm(request.POST, instance=estagio)
+		if(form.is_valid()):
+			form.save()
+			return redirect('tutoria_estagios_list', pk=pk)
+	else:
+		form = EstagioExtraCurricularForm(instance=estagio)
+	return render(request, 'app/tutoria_estagio_new.html', {'form':form})
+
+############################### ATIVIDADES EXTRACURRICULARES ################################## 
+@login_required
+def tutoria_atividades_complementares_list(request, pk):
+	tutoria = get_object_or_404(Tutoria, pk=pk)
+
+	acs = Atividadecomplementar.objects.filter(tutoria=tutoria.id)
+	context = {
+		'acs': acs,
+		'tutoria': tutoria
+	}
+	return render(request, 'app/tutoria_atividades_complementares_list.html', context)
+
+@login_required
+def tutoria_atividade_complementar_new(request, pk):
+	tutoria = get_object_or_404(Tutoria, pk=pk)
+	if (request.method == 'POST'):
+		form = AtividadeComplementarForm(request.POST)
+		if (form.is_valid()):
+			ac = form.save(commit=False)
+			ac.tutoria = tutoria
+			ac.save()
+			return redirect('tutoria_atividades_complementares_list', pk=pk)
+	else:
+		form = AtividadeComplementarForm()
+	return render(request, 'app/tutoria_atividade_complementar_new.html', {'form':form})
+
+@login_required
+def tutoria_atividade_complementar_edit(request, pk, pk_1):
+	tutoria = get_object_or_404(Tutoria, pk=pk)
+	ac = get_object_or_404(Atividadecomplementar, pk=pk_1)
+	if (request.method == 'POST'):
+		form = AtividadeComplementarForm(request.POST, instance=ac)
+		if(form.is_valid()):
+			form.save()
+			return redirect('tutoria_atividades_complementares_list', pk=pk)
+	else:
+		form = AtividadeComplementarForm(instance=ac)
+	return render(request, 'app/tutoria_atividade_complementar_new.html', {'form':form})
+
+############################## ATIVIDADES COMPLEMENTARES #####################################
+@login_required
+def tutoria_atividades_extracurriculares_list(request, pk):
+	tutoria = get_object_or_404(Tutoria, pk=pk)
+
+	aecs = Atividadeextracurricular.objects.filter(tutoria=tutoria.id)
+	context = {
+		'aecs': aecs,
+		'tutoria': tutoria
+	}
+	return render(request, 'app/tutoria_atividades_extracurriculares_list.html', context)
+
+@login_required
+def tutoria_atividade_extracurricular_new(request, pk):
+	tutoria = get_object_or_404(Tutoria, pk=pk)
+	if (request.method == 'POST'):
+		form = AtividadeExtraCurricularForm(request.POST)
+		if (form.is_valid()):
+			aec = form.save(commit=False)
+			aec.tutoria = tutoria
+			aec.save()
+			return redirect('tutoria_atividades_extracurriculares_list', pk=pk)
+	else:
+		form = AtividadeExtraCurricularForm()
+	return render(request, 'app/tutoria_atividade_extracurricular_new.html', {'form':form})
+
+@login_required
+def tutoria_atividade_extracurricular_edit(request, pk, pk_1):
+	tutoria = get_object_or_404(Tutoria, pk=pk)
+	aec = get_object_or_404(Atividadeextracurricular, pk=pk_1)
+	if (request.method == 'POST'):
+		form = AtividadeExtraCurricularForm(request.POST, instance=aec)
+		if(form.is_valid()):
+			form.save()
+			return redirect('tutoria_atividades_extracurriculares_list', pk=pk)
+	else:
+		form = AtividadeExtraCurricularForm(instance=aec)
+	return render(request, 'app/tutoria_atividade_extracurricular_new.html', {'form':form})
 
 
 # 1. ADD SENHA NO FORM (A SENHA SERVIRÁ PARA A CRIAÇÃO DO USUÁRIO)

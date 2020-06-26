@@ -11,7 +11,7 @@ from django.db import models
 class Atividadecomplementar(models.Model):
     id = models.AutoField(db_column='ID', primary_key=True)  # Field name made lowercase.
     descricao = models.CharField(db_column='Descricao', max_length=200)  # Field name made lowercase.
-    cargahoraria = models.IntegerField(db_column='CargaHoraria')  # Field name made lowercase.
+    carga_horaria = models.IntegerField(db_column='CargaHoraria')  # Field name made lowercase.
     tutoria = models.ForeignKey('Tutoria', models.DO_NOTHING, db_column='TutoriaID')  # Field name made lowercase.
 
     class Meta:
@@ -23,7 +23,7 @@ class Atividadeextracurricular(models.Model):
     id = models.AutoField(db_column='ID', primary_key=True)  # Field name made lowercase.
     descricao = models.CharField(db_column='Descricao', max_length=200)  # Field name made lowercase.
     tipo = models.CharField(db_column='Tipo', max_length=10)  # Field name made lowercase.
-    bolsista = models.IntegerField(db_column='Bolsista')  # Field name made lowercase.
+    bolsista = models.BooleanField(db_column='Bolsista')  # Field name made lowercase.
     tutoria = models.ForeignKey('Tutoria', models.DO_NOTHING, db_column='TutoriaID')  # Field name made lowercase.
 
     class Meta:
@@ -122,10 +122,10 @@ class Docente(models.Model):
 class Estagioextracurricular(models.Model):
     id = models.AutoField(db_column='ID', primary_key=True)  # Field name made lowercase.
     descricao = models.CharField(db_column='Descricao', max_length=100)  # Field name made lowercase.
-    remuneracao = models.FloatField(db_column='Remuneracao')  # Field name made lowercase.
-    cargahoraria = models.IntegerField(db_column='CargaHoraria')  # Field name made lowercase.
-    datainicio = models.DateField(db_column='DataInicio')  # Field name made lowercase.
-    datafim = models.DateField(db_column='DataFim', blank=True, null=True)  # Field name made lowercase.
+    remunerado = models.BooleanField(db_column='Remunerado')  # Field name made lowercase.
+    carga_horaria = models.IntegerField(db_column='CargaHoraria')  # Field name made lowercase.
+    data_inicio = models.DateField(db_column='DataInicio')  # Field name made lowercase.
+    data_fim = models.DateField(db_column='DataFim', blank=True, null=True)  # Field name made lowercase.
     tutoria = models.ForeignKey('Tutoria', models.DO_NOTHING, db_column='TutoriaID')  # Field name made lowercase.
 
     class Meta:
@@ -154,15 +154,16 @@ class OrientacaomatriculaDisciplina(models.Model):
 
 class Tutoria(models.Model):
     id = models.AutoField(db_column='ID', primary_key=True)  # Field name made lowercase.
-    legislacoesifbaiano = models.TextField(db_column='LegislacoesIFBaiano')  # Field name made lowercase.
-    dificuldadessemestreatual = models.TextField(db_column='DificuldadesSemestreAtual')  # Field name made lowercase.
-    acoes = models.TextField(db_column='Acoes')  # Field name made lowercase.
-    sugestoesdifsemestre = models.TextField(db_column='SugestoesDifSemestre')  # Field name made lowercase.
-    dificuldadescurso = models.TextField(db_column='DificuldadesCurso')  # Field name made lowercase.
-    sugestoesdifcurso = models.TextField(db_column='SugestoesDifCurso')  # Field name made lowercase.
-    observacoes = models.TextField(db_column='Observacoes')  # Field name made lowercase.
+    legislacoes_ifbaiano = models.TextField(db_column='LegislacoesIFBaiano', blank=True, null=True)  # Field name made lowercase.
+    dificuldades_semestre_atual = models.TextField(db_column='DificuldadesSemestreAtual', blank=True, null=True)  # Field name made lowercase.
+    acoes = models.TextField(db_column='Acoes', blank=True, null=True)  # Field name made lowercase.
+    sugestoes_dif_semestre = models.TextField(db_column='SugestoesDifSemestre', blank=True, null=True)  # Field name made lowercase.
+    dificuldades_curso = models.TextField(db_column='DificuldadesCurso', blank=True, null=True)  # Field name made lowercase.
+    sugestoes_dif_curso = models.TextField(db_column='SugestoesDifCurso', blank=True, null=True)  # Field name made lowercase.
+    observacoes = models.TextField(db_column='Observacoes', blank=True, null=True)  # Field name made lowercase.
     docente = models.ForeignKey(Docente, models.DO_NOTHING, db_column='DocenteID')  # Field name made lowercase.
     discente = models.ForeignKey(Discente, models.DO_NOTHING, db_column='DiscenteID')  # Field name made lowercase.
+    status = models.CharField(db_column='Status', max_length=100, blank=True, null=True)
 
     class Meta:
         managed = False

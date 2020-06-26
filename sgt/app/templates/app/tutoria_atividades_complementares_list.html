@@ -1,0 +1,33 @@
+{% extends 'app/base2.html' %}
+
+{% block content %}
+    <div class="row">
+        <div class="form-group col-md-12">
+            <h2>{{ tutoria.discente }}: Atividades Complementares</h2>
+        </div>
+    </div>
+    <hr>
+    <div class="row table-responsive">
+        <table class="table table-borderless table-hover">
+            <thead class="thead-light">
+              <th scope="col">Descriçao da Atividade</th>
+              <th scope="col">Carga Horária</th>
+              <th scope="col"></th>
+            </thead>
+            <tbody>
+              {% for ac in acs %}
+              <tr>
+                <td>{{ ac.descricao }}</td>
+                <td>{{ ac.carga_horaria }}</td>
+
+                <td><a href="{% url 'tutoria_atividade_complementar_edit' pk=tutoria.id pk_1=ac.pk %}">Editar</a></td>
+              </tr>
+              {% endfor %}        
+            </tbody>
+        </table>
+    </div>  
+
+    <div class="row add-table">
+      <a href="{% url 'tutoria_atividade_complementar_new' pk=tutoria.id %}" class="top-menu"><span class="glyphicon glyphicon-plus">Adicionar Atividade</span></a>
+    </div> 
+{% endblock %}
