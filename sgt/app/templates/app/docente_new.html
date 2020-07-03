@@ -1,11 +1,47 @@
 {% extends 'app/base2.html' %}
 
+{% load crispy_forms_tags %}
+
 {% block content %}
 	<h2>Novo Docente</h2>
     <form method="POST">
     	{% csrf_token %}
-    	{{ form.as_p }}
+    	<hr>
+		<div class="row">
+            <div class="col-8">
+              {{ form.nome|as_crispy_field }}
+            </div>
+        </div>
+		<div class="row">
+            <div class="col-8">
+              {{ form.curso|as_crispy_field }}
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-4">
+                {{ form.email|as_crispy_field }}
+            </div>
+            <div class="col-4">
+                {{ form.siape|as_crispy_field }}
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-4">
+                {{ form.senha|as_crispy_field }}
+            </div>
+        </div>
+
         
         <button type="submit" class="btn btn-success">Salvar</button>
     </form>
+{% endblock %}
+
+{% block js %}
+    <script type="text/javascript">
+    	if($("#id_senha").attr("hidePwdField") == 'S'){
+            $("#div_id_senha").hide();
+        } else {
+        	$("#div_id_senha").show();
+        }
+    </script>
 {% endblock %}

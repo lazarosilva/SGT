@@ -13,6 +13,7 @@
               <th scope="col">Descriçao da Atividade</th>
               <th scope="col">Carga Horária</th>
               <th scope="col"></th>
+              <th scope="col"></th>
             </thead>
             <tbody>
               {% for ac in acs %}
@@ -21,6 +22,7 @@
                 <td>{{ ac.carga_horaria }}</td>
 
                 <td><a href="{% url 'tutoria_atividade_complementar_edit' pk=tutoria.id pk_1=ac.pk %}">Editar</a></td>
+                <td><a href="{% url 'tutoria_atividade_complementar_remove' pk=tutoria.id pk_1=ac.pk %}">Excluir</a></td>
               </tr>
               {% endfor %}        
             </tbody>

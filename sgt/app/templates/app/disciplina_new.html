@@ -1,10 +1,46 @@
 {% extends 'app/base2.html' %}
 
+{% load crispy_forms_tags %}
+
 {% block content %}
 	<h2>Nova Disciplina</h2>
     <form method="POST">
     	{% csrf_token %}
-    	{{ form.as_p }}
+    	<hr>
+		<h4>Geral</h4>
+            <div class="row">
+                <div class="col-8">
+                  {{ form.nome|as_crispy_field }}
+                </div>
+            </div>
+			<div class="row">
+                <div class="col-8">
+                  {{ form.curso|as_crispy_field }}
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-4">
+                    {{ form.carga_horaria|as_crispy_field }}
+                </div>
+                <div class="col-4">
+                    {{ form.ativa|as_crispy_field }}
+                </div>
+            </div>
+        <hr>
+		<h4>Horário no Semestre atual</h4>
+            <div class="row">
+                <div class="col-4">
+                    {{ form.dias_aula|as_crispy_field }}
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-4">
+                    {{ form.hora_aula_inicio|as_crispy_field }}
+                </div>
+                <div class="col-4">
+                    {{ form.hora_aula_fim|as_crispy_field }}
+                </div>
+            </div>
         
         <button type="submit" class="btn btn-success">Salvar</button>
     </form>

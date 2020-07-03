@@ -15,6 +15,7 @@
               <th scope="col">Data de Início</th>
               <th scope="col">Data de Término</th>
               <th scope="col"></th>
+              <th scope="col"></th>
             </thead>
             <tbody>
               {% for est in estagios %}
@@ -25,6 +26,7 @@
                 <td>{{ est.data_fim }}</td>
 
                 <td><a href="{% url 'tutoria_estagio_edit' pk=tutoria.id pk_1=est.pk %}">Editar</a></td>
+                <td><a href="{% url 'tutoria_estagio_remove' pk=tutoria.id pk_1=est.pk %}">Excluir</a></td>
               </tr>
               {% endfor %}        
             </tbody>

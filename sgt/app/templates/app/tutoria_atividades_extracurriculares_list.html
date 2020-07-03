@@ -14,6 +14,7 @@
               <th scope="col">Tipo</th>
               <th scope="col">Bolsista</th>
               <th scope="col"></th>
+              <th scope="col"></th>
             </thead>
             <tbody>
               {% for aec in aecs %}
@@ -23,6 +24,7 @@
                 <td>{{ aec.bolsista }}</td>
 
                 <td><a href="{% url 'tutoria_atividade_extracurricular_edit' pk=tutoria.id pk_1=aec.pk %}">Editar</a></td>
+                <td><a href="{% url 'tutoria_atividade_extracurricular_remove' pk=tutoria.id pk_1=aec.pk %}">Excluir</a></td>
               </tr>
               {% endfor %}        
             </tbody>

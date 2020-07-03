@@ -1,0 +1,24 @@
+{% extends 'app/base2.html' %}
+
+{% load crispy_forms_tags %}
+
+{% block content %}
+	<h2>Disciplinas Cursadas</h2>
+    <form method="POST">
+    	{% csrf_token %}
+		<hr>
+        {{ form.tutoria|as_crispy_field }}
+        <div class="row">
+            <div class="col-8">
+            	{{ form.curso|as_crispy_field }}
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-4">
+                {{ form.disciplinas|as_crispy_field }}
+            </div>
+        </div>
+        
+        <button type="submit" class="btn btn-success">Salvar</button>
+    </form>
+{% endblock %}

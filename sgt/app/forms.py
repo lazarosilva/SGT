@@ -1,16 +1,45 @@
 from django import forms
-from .models import Curso, Disciplina, Docente, Discente, Tutoria, Atividadecomplementar, Estagioextracurricular, Atividadeextracurricular
+from .models import Curso, Disciplina, TutoriaDisciplina, Docente, Discente, Tutoria, Atividadecomplementar, Estagioextracurricular, Atividadeextracurricular
 from django.core.validators import MaxValueValidator, MinValueValidator 
 
 class DateInput(forms.DateInput):
 	input_type = 'date'
 
+class TutoriaDisciplinaForm(forms.ModelForm):
+	tutoria = forms.CharField(required=False, widget=forms.HiddenInput)
+	disciplinas = forms.ModelMultipleChoiceField(label='Disciplinas já cursadas', required=False, widget=forms.CheckboxSelectMultiple, queryset=None)
+	curso = forms.CharField(label='Curso', required=False)
+
+	class Meta:
+		model = TutoriaDisciplina
+		fields = ('curso', 'tutoria', 'disciplinas')
+
+	def __init__(self, *args, **kwargs):
+		self.tut = kwargs.pop('tut')
+		super(TutoriaDisciplinaForm, self).__init__(*args, **kwargs)
+		# self.fields['docente'].initial = self.doc[0].nome
+		# if self.ppp == 'add' or self.ppp == 'upd_n':
+		if self.tut != '':
+			self.fields['tutoria'].widget.attrs.update({'selected-option': self.tut.id})
+			self.fields['disciplinas'].queryset = Disciplina.objects.filter(curso=self.tut.discente.curso).order_by('nome')
+
 class DisciplinaForm(forms.ModelForm):
 	# curso = forms.ModelChoiceField(queryset=Curso.objects.all())
+	YES_OR_NO=[(None,'--------'), (True, 'Sim'), (False, 'Não')]
+	DIAS_SEMANA=[(2, 'Segunda'), (3, 'Terça'), (4, 'Quarta'), (5, 'Quinta'), (6, 'Sexta'), (7, 'Sábado')]
+
+	carga_horaria = forms.IntegerField(label='Carga Horária')
+	carga_horaria.widget.attrs.update({'class': 'hideArrows'})
+	ativa = forms.ChoiceField(label='Disciplina Ativa', choices=YES_OR_NO, widget=forms.Select)
+	dias_aula = forms.MultipleChoiceField(label='Dias da aula', required=False, choices=DIAS_SEMANA, widget=forms.CheckboxSelectMultiple)
+	hora_aula_inicio = forms.CharField(label='Início da aula', required=False)
+	hora_aula_inicio.widget.attrs.update({'placeholder':'00:00', 'data-mask': '00:00'})
+	hora_aula_fim = forms.CharField(label='Fim da aula', required=False)
+	hora_aula_fim.widget.attrs.update({'placeholder':'00:00', 'data-mask': '00:00'})
 
 	class Meta:
 		model = Disciplina
-		fields = '__all__'
+		fields = ('nome', 'carga_horaria', 'dias_aula', 'hora_aula_inicio', 'hora_aula_fim' , 'curso', 'ativa')
 
 class EstagioExtraCurricularForm(forms.ModelForm):
 	
@@ -88,11 +117,15 @@ class TutoriaForm(forms.ModelForm):
 		# if self.ppp == 'add' or self.ppp == 'upd_n':
 		self.fields['docente'].required = False
 		self.fields['docente'].widget.attrs.update({'selected-option': self.doc[0].id})
+		self.fields['discente'].queryset = Discente.objects.filter(curso=self.doc[0].curso).order_by('nome')
  
 
 class DocenteForm(forms.ModelForm):
 	# curso = forms.ModelChoiceField(queryset=Curso.objects.all())
-	senha = forms.CharField(max_length=32, widget=forms.PasswordInput) 
+	senha = forms.CharField(max_length=32, widget=forms.PasswordInput)
+	email = forms.CharField(max_length=100, label='E-mail')
+	siape = forms.IntegerField(label='SIAPE')
+	siape.widget.attrs.update({'class': 'hideArrows'}) 
 	# confirmar_senha = forms.CharField(max_length=32, widget=forms.PasswordInput)
 
 	# def clean(self):
@@ -109,6 +142,14 @@ class DocenteForm(forms.ModelForm):
 	class Meta:
 		model = Docente
 		fields = ('nome', 'curso', 'email', 'siape',)
+
+	def __init__(self, *args, **kwargs):
+		self.op = kwargs.pop('op')
+		super(DocenteForm, self).__init__(*args, **kwargs)
+		# self.fields['docente'].initial = self.doc[0].nome
+		if self.op == 'upd':
+			self.fields['senha'].required = False
+			self.fields['senha'].widget.attrs.update({'hidePwdField':'S'})
 
 class DiscenteForm(forms.ModelForm):
 

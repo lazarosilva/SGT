@@ -12,7 +12,7 @@ class Atividadecomplementar(models.Model):
     id = models.AutoField(db_column='ID', primary_key=True)  # Field name made lowercase.
     descricao = models.CharField(db_column='Descricao', max_length=200)  # Field name made lowercase.
     carga_horaria = models.IntegerField(db_column='CargaHoraria')  # Field name made lowercase.
-    tutoria = models.ForeignKey('Tutoria', models.DO_NOTHING, db_column='TutoriaID')  # Field name made lowercase.
+    tutoria = models.ForeignKey('Tutoria', db_column='TutoriaID', on_delete=models.CASCADE)  # Field name made lowercase.
 
     class Meta:
         managed = False
@@ -24,7 +24,7 @@ class Atividadeextracurricular(models.Model):
     descricao = models.CharField(db_column='Descricao', max_length=200)  # Field name made lowercase.
     tipo = models.CharField(db_column='Tipo', max_length=10)  # Field name made lowercase.
     bolsista = models.BooleanField(db_column='Bolsista')  # Field name made lowercase.
-    tutoria = models.ForeignKey('Tutoria', models.DO_NOTHING, db_column='TutoriaID')  # Field name made lowercase.
+    tutoria = models.ForeignKey('Tutoria', db_column='TutoriaID', on_delete=models.CASCADE)  # Field name made lowercase.
 
     class Meta:
         managed = False
@@ -91,10 +91,12 @@ class Discente(models.Model):
 class Disciplina(models.Model):
     id = models.AutoField(db_column='ID', primary_key=True)  # Field name made lowercase.
     nome = models.CharField(db_column='Nome', max_length=100)  # Field name made lowercase.
-    cargahoraria = models.IntegerField(db_column='CargaHoraria')  # Field name made lowercase.
-    horariosemana = models.CharField(db_column='HorarioSemana', max_length=20)  # Field name made lowercase.
+    carga_horaria = models.IntegerField(db_column='CargaHoraria')  # Field name made lowercase.
+    dias_aula = models.CharField(db_column='DiasAula', max_length=20, blank=True, null=True)  # Field name made lowercase.
     curso = models.ForeignKey(Curso, models.DO_NOTHING, db_column='CursoID')  # Field name made lowercase.
-    ativa = models.IntegerField(db_column='Ativa')  # Field name made lowercase.
+    ativa = models.BooleanField(db_column='Ativa')  # Field name made lowercase.
+    hora_aula_inicio = models.CharField(db_column='HoraAulaInicio', max_length=5, blank=True, null=True)
+    hora_aula_fim = models.CharField(db_column='HoraAulaFim', max_length=5, blank=True, null=True)
 
     def __str__(self):
         return self.nome
@@ -126,7 +128,7 @@ class Estagioextracurricular(models.Model):
     carga_horaria = models.IntegerField(db_column='CargaHoraria')  # Field name made lowercase.
     data_inicio = models.DateField(db_column='DataInicio')  # Field name made lowercase.
     data_fim = models.DateField(db_column='DataFim', blank=True, null=True)  # Field name made lowercase.
-    tutoria = models.ForeignKey('Tutoria', models.DO_NOTHING, db_column='TutoriaID')  # Field name made lowercase.
+    tutoria = models.ForeignKey('Tutoria', db_column='TutoriaID', on_delete=models.CASCADE)  # Field name made lowercase.
 
     class Meta:
         managed = False
@@ -171,7 +173,8 @@ class Tutoria(models.Model):
 
 
 class TutoriaDisciplina(models.Model):
-    tutoriaid = models.ForeignKey(Tutoria, models.DO_NOTHING, db_column='TutoriaID')  # Field name made lowercase.
+    id = models.AutoField(db_column='ID', primary_key=True)
+    tutoria = models.ForeignKey(Tutoria, models.DO_NOTHING, db_column='TutoriaID')  # Field name made lowercase.
     disciplina = models.ForeignKey(Disciplina, models.DO_NOTHING, db_column='DisciplinaID')  # Field name made lowercase.
 
     class Meta:
