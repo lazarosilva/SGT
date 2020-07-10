@@ -3,12 +3,16 @@
 {% load crispy_forms_tags %}
 
 {% block content %}
-	<h2>Novo Discente</h2>
 
     <form method="POST">
     	{% csrf_token %}
+        {% ifequal op "upd" %}
+            <h2>Editar Discente</h2>
+        {% else %}
+            <h2>Novo Discente</h2>
+        {% endifequal %}
     	<hr>
-			<h3>Geral</h3>
+			<h4>Geral</h4>
             <div class="row">
                 <div class="col-8">
                   {{ form.nome|as_crispy_field }}
@@ -52,7 +56,7 @@
         <div class="row">
         </div>
         <hr>
-            <h3>Socioeconômico</h3>
+            <h4>Socioeconômico</h4>
             <div class="row">
                 <div class="col-2">
                     {{ form.trabalha|as_crispy_field }}
@@ -77,7 +81,7 @@
 <!--                 <small id="help_renda_familiar" class="form-text text-muted">Informe a renda aproximada da família, em salários mínimos.</small> -->
             </div>
         <hr>
-            <h3>Expectativas</h3>
+            <h4>Expectativas</h4>
             <div class="row">
                 <div class="col-4">
                     {{ form.motivo_escolha_curso|as_crispy_field}}
@@ -111,7 +115,7 @@
             <div class="row">
             </div>
         <hr>
-            <h3>Experiências e Dificuldades</h3>
+            <h4>Experiências e Dificuldades</h4>
             <div class="row">
                 <div class="col-4">
                     {{ form.fez_curso_tecnico|as_crispy_field}}

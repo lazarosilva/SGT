@@ -3,9 +3,13 @@
 {% load crispy_forms_tags %}
 
 {% block content %}
-	<h2>Nova AC</h2>
     <form method="POST">
     	{% csrf_token %}
+        {% ifequal op "upd" %}
+            <h2>Editar Atividade Complementar</h2>
+        {% else %}
+            <h2>Nova Atividade Complementar</h2>
+        {% endifequal %}
 		<hr>
         <div class="row">
             <div class="col-8">

@@ -1,18 +1,18 @@
 from django import forms
-from .models import Curso, Disciplina, TutoriaDisciplina, Docente, Discente, Tutoria, Atividadecomplementar, Estagioextracurricular, Atividadeextracurricular
+from .models import Curso, Disciplina, TutoriaDisciplina, Docente, Discente, Orientacaomatricula, Tutoria, Atividadecomplementar, Estagioextracurricular, Atividadeextracurricular
 from django.core.validators import MaxValueValidator, MinValueValidator 
 
 class DateInput(forms.DateInput):
 	input_type = 'date'
 
 class TutoriaDisciplinaForm(forms.ModelForm):
-	tutoria = forms.CharField(required=False, widget=forms.HiddenInput)
+	# tutoria = forms.CharField(required=False, widget=forms.HiddenInput)
 	disciplinas = forms.ModelMultipleChoiceField(label='Disciplinas já cursadas', required=False, widget=forms.CheckboxSelectMultiple, queryset=None)
 	curso = forms.CharField(label='Curso', required=False)
 
 	class Meta:
 		model = TutoriaDisciplina
-		fields = ('curso', 'tutoria', 'disciplinas')
+		fields = ('curso', 'disciplinas')
 
 	def __init__(self, *args, **kwargs):
 		self.tut = kwargs.pop('tut')
@@ -20,7 +20,9 @@ class TutoriaDisciplinaForm(forms.ModelForm):
 		# self.fields['docente'].initial = self.doc[0].nome
 		# if self.ppp == 'add' or self.ppp == 'upd_n':
 		if self.tut != '':
-			self.fields['tutoria'].widget.attrs.update({'selected-option': self.tut.id})
+			self.fields['curso'].initial = self.tut.discente.curso
+			# self.fields['tutoria'].initial = self.tut
+			# self.fields['tutoria'].widget.attrs.update({'selected-option': self.tut.id})
 			self.fields['disciplinas'].queryset = Disciplina.objects.filter(curso=self.tut.discente.curso).order_by('nome')
 
 class DisciplinaForm(forms.ModelForm):
@@ -104,11 +106,12 @@ class TutoriaForm(forms.ModelForm):
 	status = forms.ChoiceField(label='Deseja finalizar a tutoria?',
      choices=NO_OR_YES, widget=forms.Select, required=False)
 	# docente = forms.ChoiceField(required=False, widget=forms.Select)
+	disciplinas_cursadas = forms.ModelMultipleChoiceField(label='Disciplinas já cursadas', required=False, widget=forms.CheckboxSelectMultiple, queryset=None)
 
 	class Meta:
 		model = Tutoria
 		fields = ('docente', 'discente', 'legislacoes_ifbaiano', 'dificuldades_semestre_atual', 'acoes',
-			'sugestoes_dif_semestre', 'dificuldades_curso', 'sugestoes_dif_curso', 'observacoes', 'status')
+			'sugestoes_dif_semestre', 'dificuldades_curso', 'sugestoes_dif_curso', 'observacoes', 'status', 'disciplinas_cursadas')
 
 	def __init__(self, *args, **kwargs):
 		self.doc = kwargs.pop('doc')
@@ -118,7 +121,7 @@ class TutoriaForm(forms.ModelForm):
 		self.fields['docente'].required = False
 		self.fields['docente'].widget.attrs.update({'selected-option': self.doc[0].id})
 		self.fields['discente'].queryset = Discente.objects.filter(curso=self.doc[0].curso).order_by('nome')
- 
+		self.fields['disciplinas_cursadas'].queryset = Disciplina.objects.filter(curso=self.doc[0].curso).order_by('nome')
 
 class DocenteForm(forms.ModelForm):
 	# curso = forms.ModelChoiceField(queryset=Curso.objects.all())
@@ -150,6 +153,29 @@ class DocenteForm(forms.ModelForm):
 		if self.op == 'upd':
 			self.fields['senha'].required = False
 			self.fields['senha'].widget.attrs.update({'hidePwdField':'S'})
+
+class OrientacaoMatriculaForm(forms.ModelForm):
+
+	NO_OR_YES=[('N', 'Não'),('S', 'Sim')]
+
+	disciplinas = forms.ModelMultipleChoiceField(label='Disciplinas a serem cursadas no próximo semestre', required=False, widget=forms.CheckboxSelectMultiple, queryset=None)
+	status = forms.ChoiceField(label='Deseja finalizar a tutoria?',
+     choices=NO_OR_YES, widget=forms.Select, required=False)
+
+	class Meta:
+		model = Orientacaomatricula
+		fields = ('docente', 'discente', 'disciplinas', 'status')
+
+	def __init__(self, *args, **kwargs):
+		self.doc = kwargs.pop('doc')
+		super(OrientacaoMatriculaForm, self).__init__(*args, **kwargs)
+		# self.fields['docente'].initial = self.doc[0].nome
+		# if self.ppp == 'add' or self.ppp == 'upd_n':
+		self.fields['docente'].required = False
+		self.fields['docente'].widget.attrs.update({'selected-option': self.doc[0].id})
+		self.fields['discente'].queryset = Discente.objects.filter(curso=self.doc[0].curso).order_by('nome')
+		self.fields['disciplinas'].queryset = Disciplina.objects.filter(curso=self.doc[0].curso).order_by('nome')
+
 
 class DiscenteForm(forms.ModelForm):
 

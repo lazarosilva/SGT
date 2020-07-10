@@ -3,9 +3,13 @@
 {% load crispy_forms_tags %}
 
 {% block content %}
-	<h2>Novo Estágio</h2>
     <form method="POST">
     	{% csrf_token %}
+        {% ifequal op "upd" %}
+            <h2>Editar Estágio Extracurricular</h2>
+        {% else %}
+            <h2>Novo Estágio Extracurricular</h2>
+        {% endifequal %}
 		<hr>
         <div class="row">
             <div class="col-8">

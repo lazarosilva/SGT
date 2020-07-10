@@ -139,6 +139,8 @@ class Orientacaomatricula(models.Model):
     id = models.AutoField(db_column='ID', primary_key=True)  # Field name made lowercase.
     docente = models.ForeignKey(Docente, models.DO_NOTHING, db_column='DocenteID')  # Field name made lowercase.
     discente = models.ForeignKey(Discente, models.DO_NOTHING, db_column='DiscenteID')  # Field name made lowercase.
+    disciplinas = models.CharField(db_column='Disciplinas', max_length=200, blank=True, null=True)
+    status = models.CharField(db_column='Status', max_length=1, blank=True, null=True)
 
     class Meta:
         managed = False
@@ -165,7 +167,8 @@ class Tutoria(models.Model):
     observacoes = models.TextField(db_column='Observacoes', blank=True, null=True)  # Field name made lowercase.
     docente = models.ForeignKey(Docente, models.DO_NOTHING, db_column='DocenteID')  # Field name made lowercase.
     discente = models.ForeignKey(Discente, models.DO_NOTHING, db_column='DiscenteID')  # Field name made lowercase.
-    status = models.CharField(db_column='Status', max_length=100, blank=True, null=True)
+    status = models.CharField(db_column='Status', max_length=1, blank=True, null=True)
+    disciplinas_cursadas = models.CharField(db_column='DisciplinasCursadas', max_length=200, blank=True, null=True)
 
     class Meta:
         managed = False

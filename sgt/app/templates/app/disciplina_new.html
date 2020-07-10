@@ -3,9 +3,14 @@
 {% load crispy_forms_tags %}
 
 {% block content %}
-	<h2>Nova Disciplina</h2>
-    <form method="POST">
+	<form method="POST">
     	{% csrf_token %}
+        {% ifequal op "upd" %}
+            <h2>Editar Disciplina</h2>
+        {% else %}
+            <h2>Nova Disciplina</h2>
+        {% endifequal %}
+        <br>
     	<hr>
 		<h4>Geral</h4>
             <div class="row">

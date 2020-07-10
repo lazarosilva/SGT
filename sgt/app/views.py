@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
-from .models import Curso, Disciplina, Docente, Discente, Tutoria, TutoriaDisciplina, Estagioextracurricular, Atividadecomplementar, Atividadeextracurricular, Estagioextracurricular
-from .forms import DisciplinaForm, DocenteForm, DiscenteForm, TutoriaForm, TutoriaDisciplinaForm, AtividadeExtraCurricularForm, AtividadeComplementarForm, EstagioExtraCurricularForm
+from .models import Curso, Disciplina, Docente, Discente, Orientacaomatricula, Tutoria, TutoriaDisciplina, Estagioextracurricular, Atividadecomplementar, Atividadeextracurricular, Estagioextracurricular
+from .forms import DisciplinaForm, DocenteForm, DiscenteForm, OrientacaoMatriculaForm, TutoriaForm, TutoriaDisciplinaForm, AtividadeExtraCurricularForm, AtividadeComplementarForm, EstagioExtraCurricularForm
 from django.contrib.auth.models import User, Group
 
 
@@ -52,7 +52,13 @@ def disciplina_edit(request, pk):
 			return redirect('disciplinas_list')
 	else:
 		form = DisciplinaForm(instance=disciplina)
-	return render(request, 'app/disciplina_new.html', {'form': form})
+
+	context = {
+		'form': form,
+		'op': 'upd'
+	}
+
+	return render(request, 'app/disciplina_new.html', context)
 
 
 ########################################## DOCENTES ###########################################
@@ -95,7 +101,13 @@ def docente_edit(request, pk):
 			return redirect('docentes_list')
 	else:
 		form = DocenteForm(instance=docente, op='upd')
-	return render(request, 'app/docente_new.html', {'form': form})
+
+	context = {
+		'form': form,
+		'op': 'upd'
+	}
+
+	return render(request, 'app/docente_new.html', context)
 
 ############################################ DISCENTES ########################################
 
@@ -210,7 +222,12 @@ def discente_edit(request, pk):
 
 		form = DiscenteForm(instance=discente, mthd=mthd, tt=tt, om=om, op=op, fct=fct, fog=fog, ppe=ppe, ppp=ppp)
 
-	return render(request, 'app/discente_new.html', {'form': form})
+	context = {
+		'form': form,
+		'op': 'upd'
+	}
+
+	return render(request, 'app/discente_new.html', context)
 
 ################################## TUTORIAS ####################################
 
@@ -229,9 +246,19 @@ def tutoria_new(request):
 	if (request.method == 'POST'):
 		form = TutoriaForm(request.POST, doc=doc)
 		if (form.is_valid()):
+			disciplinas_cursadas = form.cleaned_data["disciplinas_cursadas"]
 			tutoria = form.save(commit=False)
 			tutoria.docente = doc[0]
-			tutoria.save()
+			
+			disc = ''
+			for d in disciplinas_cursadas:
+				disc = disc + str(d.id) + '_'
+
+			disc = disc[0:len(disc)-1]
+			print("disc:", disc)
+			tutoria.disciplinas_cursadas = disc
+			t = tutoria.save()
+
 			return redirect('tutorias_list')
 	else:
 		form = TutoriaForm(doc=doc)
@@ -244,13 +271,28 @@ def tutoria_edit(request, pk):
 	if (request.method == 'POST'):
 		form = TutoriaForm(request.POST, instance=tutoria, doc=doc)
 		if (form.is_valid()):
+			disciplinas_cursadas = form.cleaned_data["disciplinas_cursadas"]
 			tutoria = form.save(commit=False)
 			tutoria.docente = doc[0]
-			tutoria.save()
+			
+			disc = ''
+			for d in disciplinas_cursadas:
+				disc = disc + str(d.id) + '_'
+
+			disc = disc[0:len(disc)-1]
+			print("disc:", disc)
+			tutoria.disciplinas_cursadas = disc
+			t = tutoria.save()
 			return redirect('tutorias_list')
 	else:
 		form = TutoriaForm(instance=tutoria, doc=doc)
-	return render(request, 'app/tutoria_new.html', {'form': form})
+
+	context = {
+		'form': form,
+		'op': 'upd'
+	}
+
+	return render(request, 'app/tutoria_new.html', context)
 
 @login_required
 def tutoria_remove(request, pk):
@@ -258,42 +300,52 @@ def tutoria_remove(request, pk):
 	tutoria.delete()
 	return redirect('tutorias_list')
 
-@login_required
-def tutoria_disciplinas_cursadas(request, pk):
-	tutoria = get_object_or_404(Tutoria, pk=pk)
-	print(tutoria.discente.curso)
-	tutoria_disciplina = TutoriaDisciplina.objects.filter(tutoria=tutoria)
-	print(tutoria_disciplina is None)
-	if tutoria_disciplina:
-		retorno = tutoria_disciplinas_cursadas_edit(request, tutoria, tutoria_disciplina)		
-	else:
-		retorno = tutoria_disciplinas_cursadas_new(request, tutoria)
-		return retorno
+################################################################################################
+# @login_required
+# def tutoria_disciplinas_cursadas(request, pk):
+# 	tutoria = get_object_or_404(Tutoria, pk=pk)
+# 	tutoria_disciplina = TutoriaDisciplina.objects.filter(tutoria=tutoria)
+	
+# 	if tutoria_disciplina:
+# 		retorno = tutoria_disciplinas_cursadas_edit(request, tutoria, tutoria_disciplina[0])		
+# 	else:
+# 		retorno = tutoria_disciplinas_cursadas_new(request, tutoria)
+# 	return retorno
 
-@login_required
-def tutoria_disciplinas_cursadas_new(request, tut):
-	if (request.method == 'POST'):
-		form = TutoriaDisciplinaForm(request.POST, tut=tut)
-		if (form.is_valid()):
-			tutoria_disciplina = form.save(commit=False)
-			tutoria_disciplina.tutoria = tut[0]
-			tutoria.save()
-			return redirect('tutorias_list')
-	else:
-		form = TutoriaDisciplinaForm(tut=tut)
-	return render(request, 'app/tutoria_disciplinas_cursadas.html', {'form':form})
+# @login_required
+# def tutoria_disciplinas_cursadas_new(request, tut):
+# 	if (request.method == 'POST'):
+# 		form = TutoriaDisciplinaForm(request.POST, tut=tut)
+# 		if (form.is_valid()):
+# 			disciplinas = form.cleaned_data["disciplinas"]
 
-@login_required
-def tutoria_disciplinas_cursadas_edit(request, tut, tut_disc):
-	tutoria_disciplinas_cursadas = tut_disc	
-	if (request.method == 'POST'):
-		form = TutoriaDisciplinaForm(request.POST, instance=tutoria_disciplinas_cursadas, tut=tut)
-		if (form.is_valid()):
-			form.save()
-			return redirect('tutorias_list')
-	else:
-		form = TutoriaDisciplinaForm(instance=tutoria_disciplinas_cursadas, tut=tut)
-	return render(request, 'app/tutoria_disciplinas_cursadas.html', {'form': form})
+# 			for d in disciplinas:
+# 				tutoria_disciplina = TutoriaDisciplina(tutoria=tut, disciplina=d)
+# 				tutoria_disciplina.save()
+# 				tutoria_disciplina = None
+
+# 			return redirect('tutorias_list')
+
+# 	else:
+# 		form = TutoriaDisciplinaForm(tut=tut)
+
+# 	context = {
+# 		'form': form,
+# 		'op': 'add'
+# 	}
+# 	return render(request, 'app/tutoria_disciplinas_cursadas.html', context)
+
+# @login_required
+# def tutoria_disciplinas_cursadas_edit(request, tut, tut_disc):
+# 	tutoria_disciplinas_cursadas = tut_disc	
+# 	if (request.method == 'POST'):
+# 		form = TutoriaDisciplinaForm(request.POST, instance=tutoria_disciplinas_cursadas, tut=tut)
+# 		if (form.is_valid()):
+# 			form.save()
+# 			return redirect('tutorias_list')
+# 	else:
+# 		form = TutoriaDisciplinaForm(instance=tutoria_disciplinas_cursadas, tut=tut)
+# 	return render(request, 'app/tutoria_disciplinas_cursadas.html', {'form': form})
 
 ################################## ESTÁGIOS EXTRACURRICULARES ################################
 @login_required
@@ -332,7 +384,13 @@ def tutoria_estagio_edit(request, pk, pk_1):
 			return redirect('tutoria_estagios_list', pk=pk)
 	else:
 		form = EstagioExtraCurricularForm(instance=estagio)
-	return render(request, 'app/tutoria_estagio_new.html', {'form':form})
+
+	context = {
+		'form': form,
+		'op': 'upd'
+	}
+
+	return render(request, 'app/tutoria_estagio_new.html', context)
 
 def tutoria_estagio_remove(request, pk, pk_1):
 	estagio = get_object_or_404(Estagioextracurricular, pk=pk_1)
@@ -376,7 +434,13 @@ def tutoria_atividade_complementar_edit(request, pk, pk_1):
 			return redirect('tutoria_atividades_complementares_list', pk=pk)
 	else:
 		form = AtividadeComplementarForm(instance=ac)
-	return render(request, 'app/tutoria_atividade_complementar_new.html', {'form':form})
+
+	context = {
+		'form': form,
+		'op': 'upd'
+	}
+
+	return render(request, 'app/tutoria_atividade_complementar_new.html', context)
 
 @login_required
 def tutoria_atividade_complementar_remove(request, pk, pk_1):
@@ -421,7 +485,13 @@ def tutoria_atividade_extracurricular_edit(request, pk, pk_1):
 			return redirect('tutoria_atividades_extracurriculares_list', pk=pk)
 	else:
 		form = AtividadeExtraCurricularForm(instance=aec)
-	return render(request, 'app/tutoria_atividade_extracurricular_new.html', {'form':form})
+
+	context = {
+		'form': form,
+		'op': 'upd'
+	}
+
+	return render(request, 'app/tutoria_atividade_extracurricular_new.html', context)
 
 @login_required
 def tutoria_atividade_extracurricular_remove(request, pk, pk_1):
@@ -429,6 +499,73 @@ def tutoria_atividade_extracurricular_remove(request, pk, pk_1):
 	atividade_extracurricular.delete()
 	return redirect('tutoria_atividades_extracurriculares_list', pk=pk)
 
+################################### ORIENTAÇÃO MATRÍCULA ##############################################
+
+@login_required
+def orientacoes_matricula_list(request):
+	orientacoes = Orientacaomatricula.objects.select_related('discente').all()
+
+	context = {
+		'orientacoes': orientacoes
+	}
+	return render(request, 'app/orientacoes_matricula_list.html', context)
+
+
+@login_required
+def orientacao_matricula_new(request):
+	doc = Docente.objects.select_related('curso').filter(email__exact=request.user.email)
+	if (request.method == 'POST'):
+		form = OrientacaoMatriculaForm(request.POST, doc=doc)
+		if (form.is_valid()):
+			disciplinas = form.cleaned_data["disciplinas"]
+			orientacao_matricula = form.save(commit=False)
+			orientacao_matricula.docente = doc[0]
+			
+			disc = ''
+			for d in disciplinas:
+				disc = disc + str(d.id) + '_'
+
+			disc = disc[0:len(disc)-1]
+			print("disc:", disc)
+			orientacao_matricula.disciplinas = disc
+			om = orientacao_matricula.save()
+
+			return redirect('orientacoes_matricula_list')
+	else:
+		form = OrientacaoMatriculaForm(doc=doc)
+	return render(request, 'app/orientacao_matricula_new.html', {'form':form})
+
+@login_required
+def orientacao_matricula_edit(request, pk):
+	doc = Docente.objects.filter(email__exact=request.user.email)
+	orientacao_matricula = get_object_or_404(Orientacaomatricula, pk=pk)	
+	if (request.method == 'POST'):
+		form = OrientacaoMatriculaForm(request.POST, instance=orientacao_matricula, doc=doc)
+		if (form.is_valid()):
+			disciplinas = form.cleaned_data["disciplinas"]
+			orientacao = form.save(commit=False)
+			orientacao.docente = doc[0]
+			
+			disc = ''
+			for d in disciplinas:
+				disc = disc + str(d.id) + '_'
+
+			disc = disc[0:len(disc)-1]
+			print("disc:", disc)
+			orientacao.disciplinas = disc
+			o = orientacao.save()
+			return redirect('orientacoes_matricula_list')
+	else:
+		form = OrientacaoMatriculaForm(instance=orientacao_matricula, doc=doc)
+
+	context = {
+		'form': form,
+		'op': 'upd'
+	}
+
+	return render(request, 'app/orientacao_matricula_new.html', context)
+
+#######################################################################################################
 # 1. ADD SENHA NO FORM (A SENHA SERVIRÁ PARA A CRIAÇÃO DO USUÁRIO)
 # 2. AO INSERIR DOCENTE, CRIAR USUÁRIO BASEADO NO E-MAIL
 # 3. INSERIR NO GRUPO DE TUTORES

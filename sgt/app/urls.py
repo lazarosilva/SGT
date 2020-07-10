@@ -17,7 +17,7 @@ urlpatterns = [
 	path('tutoria/new/', views.tutoria_new, name='tutoria_new'),
 	path('tutoria/<int:pk>/edit/', views.tutoria_edit, name='tutoria_edit'),
 	path('tutoria/<int:pk>/remove/', views.tutoria_remove, name='tutoria_remove'),
-	path('tutoria/<int:pk>/disciplinas_cursadas/', views.tutoria_disciplinas_cursadas, name='tutoria_disciplinas_cursadas'),
+	# path('tutoria/<int:pk>/disciplinas_cursadas/', views.tutoria_disciplinas_cursadas, name='tutoria_disciplinas_cursadas'),
 	path('tutoria/<int:pk>/estagios/', views.tutoria_estagios_list, name='tutoria_estagios_list'),
 	path('tutoria/<int:pk>/estagios/new', views.tutoria_estagio_new, name='tutoria_estagio_new'),
 	path('tutoria/<int:pk>/estagios/<int:pk_1>/edit', views.tutoria_estagio_edit, name='tutoria_estagio_edit'),	
@@ -30,4 +30,7 @@ urlpatterns = [
 	path('tutoria/<int:pk>/atividades_extracurriculares/new', views.tutoria_atividade_extracurricular_new, name='tutoria_atividade_extracurricular_new'),
 	path('tutoria/<int:pk>/atividades_extracurriculares/<int:pk_1>/edit', views.tutoria_atividade_extracurricular_edit, name='tutoria_atividade_extracurricular_edit'),	
 	path('tutoria/<int:pk>/atividades_extracurriculares/<int:pk_1>/remove', views.tutoria_atividade_extracurricular_remove, name='tutoria_atividade_extracurricular_remove'),	
+	path('orientacoes_matricula/', views.orientacoes_matricula_list, name='orientacoes_matricula_list'),
+	path('orientacoes_matricula/new/', views.orientacao_matricula_new, name='orientacao_matricula_new'),
+	path('orientacoes_matricula/<int:pk>/edit/', views.orientacao_matricula_edit, name='orientacao_matricula_edit'),
 ]

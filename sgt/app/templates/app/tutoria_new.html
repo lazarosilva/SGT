@@ -3,9 +3,16 @@
 {% load crispy_forms_tags %}
 
 {% block content %}
-<h2>Tutoria - Informações Básicas</h2>
+
 <form method="POST">
     	{% csrf_token %}
+        {% ifequal op "upd" %}
+            <h2>Editar Tutoria</h2>
+        {% else %}
+            <h2>Nova Tutoria</h2>
+        {% endifequal %}
+        <br>        
+        <h4>Informações Básicas</h4>
     	<hr>
     	 <div class="row">
             <div class="col-8">
@@ -59,7 +66,16 @@
                 {{ form.status|as_crispy_field}}                    
             </div>
         </div>
-           
+        <br>
+        <br>
+        <h4>Disciplinas Cursadas</h4>
+        <hr>  
+        <div class="row">
+            <div class="col-8">
+                {{ form.disciplinas_cursadas|as_crispy_field}}                    
+            </div>
+        </div>
+
         <button type="submit" class="btn btn-success">Salvar</button>
     </form>
 {% endblock %}
