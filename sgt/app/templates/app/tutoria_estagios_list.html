@@ -3,7 +3,7 @@
 {% block content %}
     <div class="row">
         <div class="form-group col-md-12">
-            <h2>{{ tutoria.discente }}: Estágios Extracurriculares</h2>
+            <h2><a href="{% url 'tutorias_list' %}">Tutorias</a> >> {{ tutoria.discente }}: Estágios Extracurriculares</h2>
         </div>
     </div>
     <hr>
@@ -23,8 +23,11 @@
                 <td>{{ est.descricao }}</td>
                 <td>{{ est.carga_horaria }}</td>
                 <td>{{ est.data_inicio }}</td>
-                <td>{{ est.data_fim }}</td>
-
+                {% if est.data_fim %}
+                  <td>{{ est.data_fim }}</td>
+                {% else %}
+                  <td></td>  
+                {% endif %}
                 <td><a href="{% url 'tutoria_estagio_edit' pk=tutoria.id pk_1=est.pk %}">Editar</a></td>
                 <td><a href="{% url 'tutoria_estagio_remove' pk=tutoria.id pk_1=est.pk %}">Excluir</a></td>
               </tr>

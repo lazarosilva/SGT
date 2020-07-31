@@ -12,7 +12,6 @@
             <thead class="thead-light">
               <th scope="col">Nome</th>
               <th scope="col">Carga Horária</th>
-              <th scope="col">Horário Semana</th>
               <th scope="col">Curso</th>
               <th scope="col"></th>
             </thead>
@@ -25,8 +24,7 @@
                 <tr style="color:red;">
               {% endif %}
                 <td>{{ disc.nome }}</td>
-                <td>{{ disc.cargahoraria }}</td>
-                <td>{{ disc.horariosemana }}</td>
+                <td style="text-align: center">{{ disc.carga_horaria }} horas</td>
                 
                 <td>
                     {{ disc.curso.nome }} 

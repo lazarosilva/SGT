@@ -266,8 +266,9 @@ def tutoria_new(request):
 
 @login_required
 def tutoria_edit(request, pk):
-	doc = Docente.objects.filter(email__exact=request.user.email)
-	tutoria = get_object_or_404(Tutoria, pk=pk)	
+	#doc = Docente.objects.filter(email__exact=request.user.email)
+	tutoria = get_object_or_404(Tutoria, pk=pk)
+	doc = Docente.objects.filter(id__exact=tutoria.docente.id)	
 	if (request.method == 'POST'):
 		form = TutoriaForm(request.POST, instance=tutoria, doc=doc)
 		if (form.is_valid()):
@@ -513,6 +514,12 @@ def orientacoes_matricula_list(request):
 
 @login_required
 def orientacao_matricula_new(request):
+	#CRIAR MÉTODO SEPARADO PARA COORDENADORES, SE NECESSÁRIO.
+	# grupo = request.user.groups.all()[0]
+	# if grupo.name == 'Coordenador':
+	# 	discentes = Discente.objects.select_related('curso').order_by('curso', 'nome').all()
+	# else:
+	# 	doc = Docente.objects.select_related('curso').filter(email__exact=request.user.email)
 	doc = Docente.objects.select_related('curso').filter(email__exact=request.user.email)
 	if (request.method == 'POST'):
 		form = OrientacaoMatriculaForm(request.POST, doc=doc)
@@ -537,8 +544,9 @@ def orientacao_matricula_new(request):
 
 @login_required
 def orientacao_matricula_edit(request, pk):
-	doc = Docente.objects.filter(email__exact=request.user.email)
-	orientacao_matricula = get_object_or_404(Orientacaomatricula, pk=pk)	
+	# doc = Docente.objects.filter(email__exact=request.user.email)
+	orientacao_matricula = get_object_or_404(Orientacaomatricula, pk=pk)
+	doc = Docente.objects.filter(id__exact=orientacao_matricula.docente.id)		
 	if (request.method == 'POST'):
 		form = OrientacaoMatriculaForm(request.POST, instance=orientacao_matricula, doc=doc)
 		if (form.is_valid()):
