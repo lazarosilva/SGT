@@ -1,8 +1,13 @@
 from django.urls import path
 from . import views
 
+
+# app_name = "app" 
+
 urlpatterns = [
 	path('', views.index, name='index'),
+	path('senha/', views.change_password, name='change_password'),
+	path('password_reset/', views.password_reset_request, name='password_reset'),
 	path('cursos/', views.cursos_list, name='cursos_list'),
 	path('disciplinas/', views.disciplinas_list, name='disciplinas_list'),
 	path('disciplina/new/', views.disciplina_new, name='disciplina_new'),

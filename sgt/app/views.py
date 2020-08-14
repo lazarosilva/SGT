@@ -3,12 +3,72 @@ from django.contrib.auth.decorators import login_required
 from .models import Curso, Disciplina, Docente, Discente, Orientacaomatricula, Tutoria, TutoriaDisciplina, Estagioextracurricular, Atividadecomplementar, Atividadeextracurricular, Estagioextracurricular
 from .forms import DisciplinaForm, DocenteForm, DiscenteForm, OrientacaoMatriculaForm, TutoriaForm, TutoriaDisciplinaForm, AtividadeExtraCurricularForm, AtividadeComplementarForm, EstagioExtraCurricularForm
 from django.contrib.auth.models import User, Group
-
+from django.contrib.auth.forms import PasswordChangeForm, PasswordResetForm
+from django.contrib.auth import update_session_auth_hash
+from django.contrib import messages
+from django.utils.translation import ugettext as _
+from django.core.mail import send_mail, BadHeaderError
+from django.http import HttpResponse
+from django.template.loader import render_to_string
+from django.db.models.query_utils import Q
+from django.utils.http import urlsafe_base64_encode
+from django.contrib.auth.tokens import default_token_generator
+from django.utils.encoding import force_bytes
 
 # Create your views here.
 @login_required
 def index(request):
 	return render(request, 'app/index.html')
+
+def password_reset_request(request):
+	if request.method == "POST":
+		password_reset_form = PasswordResetForm(request.POST)
+
+		if password_reset_form.is_valid():
+			data = password_reset_form.cleaned_data['email']
+			associated_users = User.objects.filter(Q(email=data)|Q(username=data))
+			if associated_users.exists():
+				for user in associated_users:
+					subject = "Sistema de Gestão de Tutorias - Solicitação de troca de senha"
+					email_template_name = "app/password_reset_email.txt"
+					c = {
+						"email":user.email,
+						'domain':'127.0.0.1:8000',
+						'site_name': 'IF Baiano - SGT',
+						"uid": urlsafe_base64_encode(force_bytes(user.pk)),
+						"user": user,
+						'token': default_token_generator.make_token(user),
+						'protocol': 'http',
+					}
+					email = render_to_string(email_template_name, c)
+					try:
+						send_mail(subject, email, 'lazaro.silva@ifbaiano.edu.br' , [user.email], fail_silently=False)
+					except BadHeaderError:
+						return HttpResponse('Invalid header found.')
+					return redirect ("/password_reset/done/")
+	else:
+		password_reset_form = PasswordResetForm()
+	context = {
+		'password_reset_form': password_reset_form
+	}
+	return render(request, 'app/password_reset.html', context)
+
+@login_required
+def change_password(request):
+    if request.method == 'POST':
+        form = PasswordChangeForm(request.user, request.POST)
+        if form.is_valid():
+            user = form.save()
+            update_session_auth_hash(request, user)  # Important!
+            # messages.success(request, 'Sua senha foi atualizada com sucesso!')
+            return redirect('index')
+        else:
+            messages.error(request, 'Por favor corrija o erro acima.')
+    else:
+        form = PasswordChangeForm(request.user)
+    return render(request, 'app/change_password.html', {
+        'form': form
+   })
 
 ######################################## CURSOS #############################################
 
