@@ -79,6 +79,7 @@ class Discente(models.Model):
     projetos_pesquisa = models.TextField(db_column='ProjetoPesquisa', blank=True, null=True)  # Field name made lowercase.
     dificuldades_ensino_medio = models.TextField(db_column='DificuldadesEnsMedio', blank=True, null=True)  # Field name made lowercase.
     dificuldades_curso = models.TextField(db_column='DificuldadesCurso', blank=True, null=True)  # Field name made lowercase.
+    ativo = models.BooleanField(db_column='Ativo', default=True)  # Field name made lowercase.
 
     def __str__(self):
         return self.nome

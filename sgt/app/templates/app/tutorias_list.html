@@ -29,7 +29,11 @@
                   <td>{{ tut.discente.matricula }}</td>
                   
                   <!-- buttons -->
-                  <td><a href="{% url 'tutoria_edit' pk=tut.pk %}">Editar Info. Básicas</a></td>                 
+                  {% ifequal user.groups.all.0.name "Tutor" %}
+                  <td><a href="{% url 'tutoria_edit' pk=tut.pk %}">Editar Info. Básicas</a></td>    
+                  {% else %}
+                  <td><a href="{% url 'tutoria_edit' pk=tut.pk %}">Info. Básicas</a></td>    
+                  {% endifequal %}
                   <td><a href="{% url 'tutoria_estagios_list' pk=tut.pk %}" data-toggle="tooltip" title="Estágios Extracurriculares">EECs</a></td>
                   <td><a href="{% url 'tutoria_atividades_extracurriculares_list' pk=tut.pk %}" data-toggle="tooltip" title="Atividades Extracurriculares">AECs</a></td>
                   <td><a href="{% url 'tutoria_atividades_complementares_list' pk=tut.pk %}" data-toggle="tooltip" title="Atividades Complementares">ACs</a></td>
@@ -41,7 +45,9 @@
     </div> 
 
     <div class="row add-table">
-      <a href="{% url 'tutoria_new' %}" class="top-menu"><span class="glyphicon glyphicon-plus">Adicionar Tutoria</span></a>
+      {% ifequal user.groups.all.0.name "Tutor" %}
+        <a href="{% url 'tutoria_new' %}" class="top-menu"><span class="glyphicon glyphicon-plus">Adicionar Tutoria</span></a>
+      {% endifequal %}
     </div> 
 {% endblock %}
 

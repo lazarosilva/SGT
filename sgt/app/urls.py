@@ -18,6 +18,8 @@ urlpatterns = [
 	path('discentes/', views.discentes_list, name='discentes_list'),
 	path('discente/new/', views.discente_new, name='discente_new'),
 	path('discente/<int:pk>/edit/', views.discente_edit, name='discente_edit'),
+	path('discente/<int:pk>/off/', views.discente_off, name='discente_off'),
+	path('discente/<int:pk>/on/', views.discente_on, name='discente_on'),
 	path('tutorias/', views.tutorias_list, name='tutorias_list'),
 	path('tutoria/new/', views.tutoria_new, name='tutoria_new'),
 	path('tutoria/<int:pk>/edit/', views.tutoria_edit, name='tutoria_edit'),
@@ -38,4 +40,6 @@ urlpatterns = [
 	path('orientacoes_matricula/', views.orientacoes_matricula_list, name='orientacoes_matricula_list'),
 	path('orientacoes_matricula/new/', views.orientacao_matricula_new, name='orientacao_matricula_new'),
 	path('orientacoes_matricula/<int:pk>/edit/', views.orientacao_matricula_edit, name='orientacao_matricula_edit'),
+	path('orientacoes_matricula/<int:pk>/remove/', views.orientacao_matricula_remove, name='orientacao_matricula_remove'),
+	path('orientacoes_matricula/<int:pk>/export/', views.orientacao_matricula_export, name='orientacao_matricula_export'),	
 ]

@@ -8,12 +8,18 @@ from django.contrib.auth import update_session_auth_hash
 from django.contrib import messages
 from django.utils.translation import ugettext as _
 from django.core.mail import send_mail, BadHeaderError
-from django.http import HttpResponse
+from django.http import HttpResponse, FileResponse
+from django.template.loader import render_to_string
+from django.utils.text import slugify
 from django.template.loader import render_to_string
 from django.db.models.query_utils import Q
 from django.utils.http import urlsafe_base64_encode
 from django.contrib.auth.tokens import default_token_generator
 from django.utils.encoding import force_bytes
+from reportlab.pdfgen import canvas
+from django.core.files.storage import FileSystemStorage
+
+from weasyprint import HTML
 
 # Create your views here.
 @login_required
@@ -91,6 +97,44 @@ def disciplinas_list(request):
 	}
 	return render(request, 'app/disciplinas_list.html', context)
 
+
+# def disciplina_print(request, pk):
+#     # Create a file-like buffer to receive PDF data.
+#     buffer = io.BytesIO()
+
+#     # Create the PDF object, using the buffer as its "file."
+#     p = canvas.Canvas(buffer)
+
+#     # Draw things on the PDF. Here's where the PDF generation happens.
+#     # See the ReportLab documentation for the full list of functionality.
+#     p.drawString(100, 100, "Hello world.")
+#     p.drawString(0, 100, "teste linha 2")
+
+#     # Close the PDF object cleanly, and we're done.
+#     p.showPage()
+#     p.save()
+
+#     # FileResponse sets the Content-Disposition header so that browsers
+#     # present the option to save the file.
+#     buffer.seek(0)
+#     return FileResponse(buffer, as_attachment=True, filename='hello.pdf')
+
+# def disciplina_print(request, pk):
+#     disciplina = get_object_or_404(Disciplina, pk=pk)
+#     print(disciplina)
+#     response = HttpResponse(content_type="application/pdf")
+#     response['Content-Disposition'] = "inline; filename={date}-{name}-disciplina-receipt.pdf".format(
+#         date= '20200914',
+#         name=slugify(disciplina.nome),
+#     )
+#     html = render_to_string("disciplina-receipt-pdf.html", {
+#         'disciplina': disciplina,
+#     })
+
+#     font_config = FontConfiguration()
+#     HTML(string=html).write_pdf(response, font_config=font_config)
+#     return response
+
 @login_required
 def disciplina_new(request):
 	if (request.method == 'POST'):
@@ -119,7 +163,6 @@ def disciplina_edit(request, pk):
 	}
 
 	return render(request, 'app/disciplina_new.html', context)
-
 
 ########################################## DOCENTES ###########################################
 @login_required
@@ -175,10 +218,10 @@ def docente_edit(request, pk):
 def discentes_list(request):
 	grupo = request.user.groups.all()[0]
 	if grupo.name == 'Coordenador':
-		discentes = Discente.objects.select_related('curso').order_by('curso', 'nome').all()
+		discentes = Discente.objects.select_related('curso').order_by('curso', '-ativo', 'nome').all()
 	else:
 		tutor = Docente.objects.select_related('curso').filter(email__contains=request.user)
-		discentes = Discente.objects.select_related('curso').filter(curso__exact=tutor[0].curso).order_by('curso', 'nome').all()
+		discentes = Discente.objects.select_related('curso').filter(curso__exact=tutor[0].curso).order_by('curso', '-ativo', 'nome').all()
 
 	context = {
 		'discentes': discentes
@@ -288,6 +331,20 @@ def discente_edit(request, pk):
 	}
 
 	return render(request, 'app/discente_new.html', context)
+
+@login_required
+def discente_off(request, pk):
+	discente = get_object_or_404(Discente, pk=pk)
+	discente.ativo = False
+	discente.save()
+	return redirect('discentes_list')
+
+@login_required
+def discente_on(request, pk):
+	discente = get_object_or_404(Discente, pk=pk)
+	discente.ativo = True
+	discente.save()
+	return redirect('discentes_list')
 
 ################################## TUTORIAS ####################################
 
@@ -632,6 +689,32 @@ def orientacao_matricula_edit(request, pk):
 	}
 
 	return render(request, 'app/orientacao_matricula_new.html', context)
+
+@login_required
+def orientacao_matricula_remove(request, pk):
+	om = get_object_or_404(Orientacaomatricula, pk=pk)
+	om.delete()
+	return redirect('orientacoes_matricula_list')
+
+@login_required
+def orientacao_matricula_export(request, pk):
+	orientacao_matricula = get_object_or_404(Orientacaomatricula, pk=pk)
+
+	# p1 = 'nome do discente: ' + orientacao_matricula.discente
+	# p2 = 'curso: ' + orientacao_matricula.discente.curso
+	# p3 = 'matricula: ' + orientacao_matricula.discente.matricula
+	#paragraphs = [p1, p2, p3]
+	html_string = render_to_string('app/pdf_template_orientacao_matricula.html', {'om': orientacao_matricula})
+	html = HTML(string=html_string)
+	html.write_pdf(target='/tmp/mypdf.pdf');
+	fs = FileSystemStorage('/tmp')
+
+	with fs.open('mypdf.pdf') as pdf:
+		response = HttpResponse(pdf, content_type='application/pdf')
+		response['Content-Disposition'] = 'attachment; filename="mypdf.pdf"'
+		return response
+
+	return response
 
 #######################################################################################################
 # 1. ADD SENHA NO FORM (A SENHA SERVIRÁ PARA A CRIAÇÃO DO USUÁRIO)

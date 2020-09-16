@@ -203,7 +203,7 @@ class DiscenteForm(forms.ModelForm):
 	####################################################################################################
 
 	data_nascimento = forms.DateField(label='Data de Nascimento')
-	data_nascimento.widget.attrs.update({'data-mask': '00/00/0000'})
+	data_nascimento.widget.attrs.update({'data-mask': '00/00/0000', 'placeholder': 'dd/mm/aaaa'})
 
 	ano_ingresso = forms.IntegerField(label='Ano de Ingresso')
 	ano_ingresso.widget.attrs.update({'class': 'hideArrows'})
@@ -248,7 +248,7 @@ class DiscenteForm(forms.ModelForm):
 	projetos_extensao = forms.CharField(label='Se sim, descreva:', required=False, widget=forms.Textarea(attrs={'rows': 5}))
 	participou_pesquisa = forms.ChoiceField(label='Você já participou de projetos de pesquisa?', choices=NO_OR_YES, widget=forms.Select, required=False)
 	projetos_pesquisa = forms.CharField(label='Se sim, descreva:', required=False, widget=forms.Textarea(attrs={'rows': 5}))
-	
+
 	class Meta:
 		model = Discente
 		fields = ('nome', 'curso', 'matricula', 'data_nascimento', 'ano_ingresso', 

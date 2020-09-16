@@ -13,6 +13,8 @@
               <th scope="col">Discente</th>
               <th scope="col">Matrícula</th>
               <th scope="col"></th>
+              <th scope="col"></th>
+              <th scope="col"></th>              
             </thead>
             <tbody>
               {% for ori in orientacoes %}
@@ -25,7 +27,9 @@
                   <td>{{ ori.discente.matricula }}</td>
                   
                   <!-- buttons -->
-                  <td><a href="{% url 'orientacao_matricula_edit' pk=ori.pk %}">Editar</a></td>                 
+                  <td><a href="{% url 'orientacao_matricula_export' pk=ori.pk %}">Exportar PDF</a></td>
+                  <td><a href="{% url 'orientacao_matricula_edit' pk=ori.pk %}">Editar</a></td>     
+                  <td><a href="{% url 'orientacao_matricula_remove' pk=ori.pk %}">Excluir</a></td>               
                 </tr>
               {% endfor %}        
             </tbody>
@@ -33,7 +37,9 @@
     </div> 
 
     <div class="row add-table">
-      <a href="{% url 'orientacao_matricula_new' %}" class="top-menu"><span class="glyphicon glyphicon-plus">Adicionar Orientação de Matrícula</span></a>
+      {% ifequal user.groups.all.0.name "Tutor" %}
+        <a href="{% url 'orientacao_matricula_new' %}" class="top-menu"><span class="glyphicon glyphicon-plus">Adicionar Orientação de Matrícula</span></a>
+      {% endifequal %}
     </div> 
 {% endblock %}
 

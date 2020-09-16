@@ -15,9 +15,19 @@
               <th scope="col">Curso</th>
               <th scope="col">Ano Ingresso</th>
               <th scope="col"></th>
+              {% ifequal user.groups.all.0.name "Coordenador" %}
+                <th scope="col"></th>
+              {% endifequal %}
             </thead>
             <tbody>
               {% for disc in discentes %}
+
+               {% if disc.ativo %}
+                <tr>
+               {% else %}
+                <tr style="color:red;">
+               {% endif %}
+
                 <td>{{ disc.nome }}</td>
                 <td>{{ disc.matricula }}</td>
                 <td>{{ disc.curso.nome }}</td>
@@ -27,6 +37,13 @@
                 </td>
                 <!-- buttons -->
                 <td><a href="{% url 'discente_edit' pk=disc.pk %}">Editar</a></td>
+                {% ifequal user.groups.all.0.name "Coordenador" %}
+                    {% if disc.ativo %}
+                      <td><a href="{% url 'discente_off' pk=disc.pk %}">Desativar</a></td>
+                    {% else %}
+                      <td><a href="{% url 'discente_on' pk=disc.pk %}">Reativar</a></td>
+                    {% endif %}
+                {% endifequal %}
               </tr>
               {% endfor %}        
             </tbody>
