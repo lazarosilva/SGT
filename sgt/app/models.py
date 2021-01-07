@@ -148,13 +148,13 @@ class Orientacaomatricula(models.Model):
         db_table = 'OrientacaoMatricula'
 
 
-class OrientacaomatriculaDisciplina(models.Model):
-    orientacao = models.ForeignKey(Orientacaomatricula, models.DO_NOTHING, db_column='OrientacaoID')  # Field name made lowercase.
-    disciplina = models.ForeignKey(Disciplina, models.DO_NOTHING, db_column='DisciplinaID')  # Field name made lowercase.
+# class OrientacaomatriculaDisciplina(models.Model):
+#     orientacao = models.ForeignKey(Orientacaomatricula, models.DO_NOTHING, db_column='OrientacaoID')  # Field name made lowercase.
+#     disciplina = models.ForeignKey(Disciplina, models.DO_NOTHING, db_column='DisciplinaID')  # Field name made lowercase.
 
-    class Meta:
-        managed = False
-        db_table = 'OrientacaoMatricula_Disciplina'
+#     class Meta:
+#         managed = False
+#         db_table = 'OrientacaoMatricula_Disciplina'
 
 
 class Tutoria(models.Model):

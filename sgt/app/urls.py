@@ -24,6 +24,7 @@ urlpatterns = [
 	path('tutoria/new/', views.tutoria_new, name='tutoria_new'),
 	path('tutoria/<int:pk>/edit/', views.tutoria_edit, name='tutoria_edit'),
 	path('tutoria/<int:pk>/remove/', views.tutoria_remove, name='tutoria_remove'),
+	path('tutoria/<int:pk>/export/', views.tutoria_export, name='tutoria_export'),
 	# path('tutoria/<int:pk>/disciplinas_cursadas/', views.tutoria_disciplinas_cursadas, name='tutoria_disciplinas_cursadas'),
 	path('tutoria/<int:pk>/estagios/', views.tutoria_estagios_list, name='tutoria_estagios_list'),
 	path('tutoria/<int:pk>/estagios/new', views.tutoria_estagio_new, name='tutoria_estagio_new'),

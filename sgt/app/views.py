@@ -418,6 +418,32 @@ def tutoria_remove(request, pk):
 	tutoria.delete()
 	return redirect('tutorias_list')
 
+@login_required
+def tutoria_export(request, pk):
+	tutoria = get_object_or_404(Tutoria, pk=pk)
+	estagios = Estagioextracurricular.objects.filter(tutoria__exact=tutoria.id)	
+	atividades_complementares = Atividadecomplementar.objects.filter(tutoria__exact=tutoria.id)
+	atividades_extracurriculares = Atividadeextracurricular.objects.filter(tutoria__exact=tutoria.id)
+
+	context = {
+		'tut': tutoria,
+		'eecs': estagios,
+		'acs': atividades_complementares,
+		'aecs': atividades_extracurriculares
+	}
+
+	html_string = render_to_string('app/pdf_template_tutoria.html', context)
+	html = HTML(string=html_string)
+	html.write_pdf(target='/tmp/mypdf.pdf');
+	fs = FileSystemStorage('/tmp')
+
+	with fs.open('mypdf.pdf') as pdf:
+		response = HttpResponse(pdf, content_type='application/pdf')
+		response['Content-Disposition'] = 'attachment; filename="mypdf.pdf"'
+		return response
+
+	return response
+
 ################################################################################################
 # @login_required
 # def tutoria_disciplinas_cursadas(request, pk):
@@ -699,12 +725,18 @@ def orientacao_matricula_remove(request, pk):
 @login_required
 def orientacao_matricula_export(request, pk):
 	orientacao_matricula = get_object_or_404(Orientacaomatricula, pk=pk)
+	disciplinas = []
 
-	# p1 = 'nome do discente: ' + orientacao_matricula.discente
-	# p2 = 'curso: ' + orientacao_matricula.discente.curso
-	# p3 = 'matricula: ' + orientacao_matricula.discente.matricula
-	#paragraphs = [p1, p2, p3]
-	html_string = render_to_string('app/pdf_template_orientacao_matricula.html', {'om': orientacao_matricula})
+	for disc in orientacao_matricula.disciplinas.split('_'):
+		d = Disciplina.objects.filter(id__exact=disc)
+		disciplinas.append(d[0])
+
+	context = {
+		'om': orientacao_matricula,
+		'disc': disciplinas
+	}
+
+	html_string = render_to_string('app/pdf_template_orientacao_matricula.html', context)
 	html = HTML(string=html_string)
 	html.write_pdf(target='/tmp/mypdf.pdf');
 	fs = FileSystemStorage('/tmp')

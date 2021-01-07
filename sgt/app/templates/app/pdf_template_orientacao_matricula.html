@@ -18,6 +18,9 @@
     <div>Tutor: {{ om.docente }}</div>
     <br><br>
   <h3>Disciplinas</h3>
+  {% for d in disc %}
+    <div>{{ d }}</div>
+  {% endfor %}
 
 </body>
 </html>
