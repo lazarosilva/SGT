@@ -1,63 +1,119 @@
+{% load static %}
 <html>
 <head>
   <title>Acompanhamento do discente</title>
   <style>
     body {
       background-color: #f7f7f7;
+      font-family: Arial, Helvetica, sans-serif;
+    }
+
+    table, th, td {
+      border: 1px solid black;
+      width: 100%;
+    }
+
+    .info_init{
+      margin-bottom: 0px;
+      padding-bottom: 0px;
     }
   </style>
 </head>
 <body>
-  <h2>Instituto Federal de Educação, Ciência e Tecnologia Baiano - Campus Serrinha</h2>
-  <h2>Tutoria - Acompanhamento do Discente</h2>
-    <div>Nome: {{ tut.discente.nome }}</div><br>
-    {% if tut.discente.nome_social %}
-      <div>Nome Social: {{ tut.discente.nome_social }}</div><br>
-    {% endif %}
-    <div>Matrícula(SIGA): {{ tut.discente.matricula }}</div><br>
-    <div>Tutor: {{ tut.docente }}</div>
+  <img src="../static/img/marca-if-baiano-campus-serrinha-horizontal.png" alt="logo_ifbaiano">
+  <img src="marca-if-baiano-campus-serrinha-horizontal.png" alt="logo_ifbaiano2">
+  <h2 style="text-align: center;">Tutoria - Acompanhamento do Discente</h2>
+      <div class="info_init">Nome: {{ tut.discente.nome }}</div><br>
+      {% if tut.discente.nome_social %}
+        <div class="info_init">Nome Social: {{ tut.discente.nome_social }}</div><br>
+      {% endif %}
+      <div class="info_init">Matrícula(SIGA): {{ tut.discente.matricula }}</div><br>
+      <div class="info_init">Tutor: {{ tut.docente }}</div>
     <br><br>
     <h4>Disciplinas já cursadas</h4>
     <div>{{ tut.disciplinas_cursadas }}</div>
     <br><br>
     <h4>Você conhece legislações e documentos referentes ao seu curso e ao IF Baiano? Quais?</h4>
     <div>{{ tut.legislacoes_ifbaiano }}</div>
-
+    <br>
     <h4>Quais disciplinas do semestre atual que você está tendo maior dificuldade? Porque?</h4>
     <div>{{ tut.dificuldades_semestre_atual }}</div>  
-    
+    <br>    
     <h4>Quais ações você acha que poderiam ajudar nessas disciplinas?</h4>
     <div>{{ tut.acoes }}</div>
-
+    <br>
     <h4>Sugestão(ões) do(a) Tutor(a) para melhorar o rendimento nas disciplinas com dificuldade:</h4>
     <div>{{ tut.sugestoes_dif_semestre }}</div>
-
+    <br>
     <h4>Qual(is) outra(as) dificuldades você tem enfrentado durante o curso?</h4>
     <div>{{ tut.dificuldades_curso }}</div>
-
+    <br>
     <h4>Sugestão(ões) do(a) Tutor(a) para o enfrentamento dessas dificuldades:</h4>
     <div>{{ tut.sugestoes_dif_curso }}</div>
-
+    <br>
     <h4>Outras observações do(a) Tutor(a):</h4>
     <div>{{ tut.observacoes }}</div>
-
+    <br>
     <br>Status da Tutoria: {{ tut.status }}
     <br><br>
 
     <h4>Estágios Extracurriculares</h4>
-    {% for est in eecs %}
-      <div>{{ est.descricao }} | {{ est.carga_horaria }} horas | de {{ est.data_inicio }} até {{ est.data_fim }}</div>
-    {% endfor %}
+    <table>
+      <thead>
+        <th scope="col">Descriçao do Estágio</th>
+        <th scope="col">Carga Horária</th>
+        <th scope="col">Data de Início</th>
+        <th scope="col">Data de Término</th>
+      </thead>
+      <tbody>
+      {% for est in eecs %}
+        <tr>
+          <td>{{ est.descricao }}</td>
+          <td>{{ est.carga_horaria }} horas</td>
+          <td>{{ est.data_inicio }}</td>
+            {% if est.data_fim %}
+              <td>{{ est.data_fim }}</td>
+            {% else %}
+              <td></td>  
+            {% endif %}
+        </tr>
+      {% endfor %}
+      </tbody>
+    </table>
 
     <h4>Atividades Extracurriculares</h4>
-    {% for ac in acs %}
-      <div>{{ ac.descricao }} | {{ ac.carga_horaria }} horas</div>
-    {% endfor %}
+    <table>
+      <thead class="thead-light">
+        <th scope="col">Descriçao da Atividade</th>
+        <th scope="col">Tipo</th>
+        <th scope="col">Bolsista</th>
+      </thead>
+      <tbody>
+        {% for aec in aecs %}
+        <tr>
+          <td>{{ aec.descricao }}</td>
+          <td>{{ aec.tipo }}</td>
+          <td>{{ aec.bolsista }}</td>
+        </tr>
+        {% endfor %}        
+      </tbody>
+      </table>
 
     <h4>Atividades Complementares</h4>
-    {% for aec in aecs %}
-      <div>{{ aec.descricao }} | tipo: {{ aec.tipo }} | bolsista {{ aec.bolsista }}</div>
-    {% endfor %}
+    <table class="table table-borderless table-hover">
+        <thead class="thead-light">
+          <th scope="col">Descriçao da Atividade</th>
+          <th scope="col">Carga Horária</th>
+        </thead>
+        <tbody>
+          {% for ac in acs %}
+          <tr>
+            <td>{{ ac.descricao }}</td>
+            <td>{{ ac.carga_horaria }}</td>
+          </tr>
+          {% endfor %}        
+        </tbody>
+    </table>
 
 </body>
 </html>

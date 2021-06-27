@@ -33,7 +33,8 @@ class DisciplinaForm(forms.ModelForm):
 	carga_horaria = forms.IntegerField(label='Carga Horária')
 	carga_horaria.widget.attrs.update({'class': 'hideArrows'})
 	ativa = forms.ChoiceField(label='Disciplina Ativa', choices=YES_OR_NO, widget=forms.Select)
-	dias_aula = forms.MultipleChoiceField(label='Dias da aula', required=False, choices=DIAS_SEMANA, widget=forms.CheckboxSelectMultiple)
+	
+	horario_semana = forms.MultipleChoiceField(label='Dias da aula', required=False, choices=DIAS_SEMANA, widget=forms.CheckboxSelectMultiple)
 	hora_aula_inicio = forms.CharField(label='Início da aula', required=False)
 	hora_aula_inicio.widget.attrs.update({'placeholder':'00:00', 'data-mask': '00:00'})
 	hora_aula_fim = forms.CharField(label='Fim da aula', required=False)
@@ -41,7 +42,7 @@ class DisciplinaForm(forms.ModelForm):
 
 	class Meta:
 		model = Disciplina
-		fields = ('nome', 'carga_horaria', 'dias_aula', 'hora_aula_inicio', 'hora_aula_fim' , 'curso', 'ativa')
+		fields = ('nome', 'carga_horaria', 'horario_semana', 'hora_aula_inicio', 'hora_aula_fim' , 'curso', 'ativa')
 
 class EstagioExtraCurricularForm(forms.ModelForm):
 	

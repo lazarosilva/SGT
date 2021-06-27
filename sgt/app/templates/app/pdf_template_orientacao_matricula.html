@@ -5,22 +5,45 @@
     body {
       background-color: #f7f7f7;
     }
+
+    table, th, td {
+      border: 1px solid black;
+      width: 100%;
+    }
+
+    .info_init{
+      margin-bottom: 0px;
+      padding-bottom: 0px;
+    }
   </style>
 </head>
 <body>
-  <h2>Instituto Federal de Educação, Ciência e Tecnologia Baiano - Campus Serrinha</h2>
-  <h2>Orientação de Matrícula</h2>
-    <div>Nome: {{ om.discente.nome }}</div><br>
-    {% if om.discente.nome_social %}
-      <div>Nome Social: {{ om.discente.nome_social }}</div><br>
-    {% endif %}
-    <div>Matrícula(SIGA): {{ om.discente.matricula }}</div><br>
-    <div>Tutor: {{ om.docente }}</div>
+  <img src="../static/img/marca-if-baiano-campus-serrinha-horizontal.png" alt="logo_ifbaiano">
+  <img src="marca-if-baiano-campus-serrinha-horizontal.png" alt="logo_ifbaiano2">
+  <h2 style="text-align: center;">Orientação de Matrícula</h2>
+      <div class="info_init">Nome: {{ om.discente.nome }}</div><br>
+      {% if om.discente.nome_social %}
+        <div class="info_init">Nome Social: {{ om.discente.nome_social }}</div><br>
+      {% endif %}
+      <div class="info_init">Matrícula(SIGA): {{ om.discente.matricula }}</div><br>
+      <div class="info_init">Tutor: {{ om.docente }}</div>
     <br><br>
-  <h3>Disciplinas</h3>
-  {% for d in disc %}
-    <div>{{ d }}</div>
-  {% endfor %}
+  <h3>Disciplinas a serem cursadas no próximo semestre:</h3>
+
+  <table>
+      <thead>
+        <th scope="col">Disciplina</th>
+        <th scope="col">Horário</th>
+      </thead>
+      <tbody>
+      {% for d in disc %}
+        <tr>
+          <td>{{ d }}</td>
+          <td>{{ d.dias_aula }}: de {{ d.hora_aula_inicio }} a {{ d.hora_aula_fim }}</td>  
+        </tr>
+      {% endfor %}
+      </tbody>
+  </table>
 
 </body>
 </html>
