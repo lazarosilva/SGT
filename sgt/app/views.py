@@ -185,9 +185,12 @@ def docente_new(request):
 			#criar usuario
 			user = User.objects.create_user(usuario_sgt, email_sgt, senha_sgt)
 			#add usuario ao grupo
+			print('usuario add')
 			group = Group.objects.get(name='Tutor')
+			print(group)
 			user.groups.add(group)
 			#salvar docente
+			print('pre-save')
 			form.save()
 			return redirect('docentes_list')
 	else:
