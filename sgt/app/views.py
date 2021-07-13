@@ -18,6 +18,8 @@ from django.contrib.auth.tokens import default_token_generator
 from django.utils.encoding import force_bytes
 from reportlab.pdfgen import canvas
 from django.core.files.storage import FileSystemStorage
+import logging
+
 
 from weasyprint import HTML
 
@@ -138,24 +140,24 @@ def disciplinas_list(request):
 @login_required
 def disciplina_new(request):
 	if (request.method == 'POST'):
-		form = DisciplinaForm(request.POST)
+		form = DisciplinaForm(request.POST, op='add', disc='')
 		if (form.is_valid()):
 			d = form.save()
 			return redirect('disciplinas_list')
 	else:
-		form = DisciplinaForm()
+		form = DisciplinaForm(op='add', disc='')
 	return render(request, 'app/disciplina_new.html', {'form':form})
 
 @login_required
 def disciplina_edit(request, pk):
 	disciplina = get_object_or_404(Disciplina, pk=pk)	
 	if (request.method == 'POST'):
-		form = DisciplinaForm(request.POST, instance=disciplina)
+		form = DisciplinaForm(request.POST, instance=disciplina, op='upd', disc=disciplina)
 		if (form.is_valid()):
 			disciplina = form.save()
 			return redirect('disciplinas_list')
 	else:
-		form = DisciplinaForm(instance=disciplina)
+		form = DisciplinaForm(instance=disciplina, op='upd', disc=disciplina)
 
 	context = {
 		'form': form,
@@ -435,14 +437,15 @@ def tutoria_export(request, pk):
 		'aecs': atividades_extracurriculares
 	}
 
-	html_string = render_to_string('app/pdf_template_tutoria.html', context)
-	html = HTML(string=html_string)
-	html.write_pdf(target='/tmp/mypdf.pdf');
-	fs = FileSystemStorage('/tmp')
 
-	with fs.open('mypdf.pdf') as pdf:
+	html_string = render_to_string('app/pdf_template_tutoria.html', context)
+	html = HTML(string=html_string, base_url=request.build_absolute_uri())
+	html.write_pdf(target='/tmp/tutoria.pdf', presentational_hints=True);
+	
+	fs = FileSystemStorage('/tmp')
+	with fs.open('tutoria.pdf') as pdf:
 		response = HttpResponse(pdf, content_type='application/pdf')
-		response['Content-Disposition'] = 'attachment; filename="mypdf.pdf"'
+		response['Content-Disposition'] = 'attachment; filename="tutoria.pdf"'
 		return response
 
 	return response
@@ -740,16 +743,28 @@ def orientacao_matricula_export(request, pk):
 	}
 
 	html_string = render_to_string('app/pdf_template_orientacao_matricula.html', context)
-	html = HTML(string=html_string)
-	html.write_pdf(target='/tmp/mypdf.pdf');
+	html = HTML(string=html_string, base_url=request.build_absolute_uri())
+	html.write_pdf(target='/tmp/orientacao_matricula.pdf', presentational_hints=True)
+	
 	fs = FileSystemStorage('/tmp')
-
-	with fs.open('mypdf.pdf') as pdf:
+	with fs.open('orientacao_matricula.pdf') as pdf:
 		response = HttpResponse(pdf, content_type='application/pdf')
-		response['Content-Disposition'] = 'attachment; filename="mypdf.pdf"'
+		response['Content-Disposition'] = 'attachment; filename="orientacao_matricula.pdf"'
 		return response
 
 	return response
+
+# 	html_string = render_to_string('app/pdf_template_tutoria.html', context)
+# 	html = HTML(string=html_string, base_url=request.build_absolute_uri())
+# 	html.write_pdf(target='/tmp/tutoria.pdf', presentational_hints=True);
+	
+# 	fs = FileSystemStorage('/tmp')
+# 	with fs.open('tutoria.pdf') as pdf:
+# 		response = HttpResponse(pdf, content_type='application/pdf')
+# 		response['Content-Disposition'] = 'attachment; filename="tutoria.pdf"'
+# 		return response
+
+# 	return response
 
 #######################################################################################################
 # 1. ADD SENHA NO FORM (A SENHA SERVIRÁ PARA A CRIAÇÃO DO USUÁRIO)

@@ -1,8 +1,4 @@
-ALTER TABLE Tutoria DROP COLUMN DocenteSIAPE;
-ALTER TABLE Tutoria ADD COLUMN DocenteID INT NOT NULL;
 
-ALTER TABLE OrientacaoMatricula DROP COLUMN DocenteSIAPE;
-ALTER TABLE OrientacaoMatricula ADD COLUMN DocenteID INT NOT NULL;
 
 /* COMANDOS JÁ EXECUTADOS NO TERMINAL */
 
@@ -39,6 +35,15 @@ ALTER TABLE Tutoria ADD COLUMN DisciplinasCursadas VARCHAR(200);
 
 ALTER TABLE OrientacaoMatricula ADD COLUMN Status VARCHAR(1);
 ALTER TABLE OrientacaoMatricula ADD COLUMN Disciplinas VARCHAR(200);
+
+ALTER TABLE Tutoria DROP COLUMN DocenteSIAPE;
+ALTER TABLE Tutoria ADD COLUMN DocenteID INT NOT NULL;
+
+ALTER TABLE OrientacaoMatricula DROP COLUMN DocenteSIAPE;
+ALTER TABLE OrientacaoMatricula ADD COLUMN DocenteID INT NOT NULL;
+
+ALTER TABLE EstagioExtraCurricular DROP COLUMN Remuneracao;
+ALTER TABLE EstagioExtraCurricular ADD COLUMN Remunerado BOOLEAN NOT NULL;
 
 source /home/lazaro/Documentos/Projeto_Tutorias_IFBaiano/correcoes_bd_sgt.sql;
 

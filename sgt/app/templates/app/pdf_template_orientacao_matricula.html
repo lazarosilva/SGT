@@ -1,3 +1,4 @@
+{% load static %}
 <html>
 <head>
   <title>Test</title>
@@ -18,8 +19,8 @@
   </style>
 </head>
 <body>
-  <img src="../static/img/marca-if-baiano-campus-serrinha-horizontal.png" alt="logo_ifbaiano">
-  <img src="marca-if-baiano-campus-serrinha-horizontal.png" alt="logo_ifbaiano2">
+  <img src="{% static 'img/marca-if-baiano-campus-serrinha-horizontal.png' %}" alt="logo_ifbaiano" width="25%" height="25%">
+  <!-- <img src="marca-if-baiano-campus-serrinha-horizontal.png" alt="logo_ifbaiano2"> -->
   <h2 style="text-align: center;">Orientação de Matrícula</h2>
       <div class="info_init">Nome: {{ om.discente.nome }}</div><br>
       {% if om.discente.nome_social %}

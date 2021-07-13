@@ -94,6 +94,8 @@ class Disciplina(models.Model):
     nome = models.CharField(db_column='Nome', max_length=100)  # Field name made lowercase.
     carga_horaria = models.IntegerField(db_column='CargaHoraria')  # Field name made lowercase.
     horario_semana = models.CharField(db_column='HorarioSemana', max_length=20, blank=True, null=True)  # Field name made lowercase.
+    hora_aula_inicio = models.CharField(db_column='HoraAulaInicio', max_length=5, blank=True, null=True)  # Field name made lowercase.
+    hora_aula_fim = models.CharField(db_column='HoraAulaFim', max_length=5, blank=True, null=True)  # Field name made lowercase.
     curso = models.ForeignKey(Curso, models.DO_NOTHING, db_column='CursoID')  # Field name made lowercase.
     ativa = models.BooleanField(db_column='Ativa')  # Field name made lowercase.
 

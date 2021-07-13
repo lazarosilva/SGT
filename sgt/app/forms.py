@@ -44,6 +44,31 @@ class DisciplinaForm(forms.ModelForm):
 		model = Disciplina
 		fields = ('nome', 'carga_horaria', 'horario_semana', 'hora_aula_inicio', 'hora_aula_fim' , 'curso', 'ativa')
 
+
+	def __init__(self, *args, **kwargs):
+		self.op = kwargs.pop('op')
+		self.disc = kwargs.pop('disc')
+		super(DisciplinaForm, self).__init__(*args, **kwargs)
+		print(self.disc.horario_semana)
+		print(self.fields['horario_semana'].choices)
+		# print(self.disc.horario_semana)
+
+		lista_horarios_disciplina = []
+		for i in self.disc.horario_semana:
+			if (i.isnumeric()):
+				lista_horarios_disciplina.append(int(i))
+		
+		print(lista_horarios_disciplina)
+
+		if self.op == 'upd':
+			self.fields['horario_semana'].initial = lista_horarios_disciplina
+
+		# self.fields['docente'].required = False
+		# self.fields['docente'].widget.attrs.update({'selected-option': self.doc[0].id})
+		# self.fields['discente'].queryset = Discente.objects.filter(curso=self.doc[0].curso).order_by('nome')
+		# self.fields['horario_semana'].queryset = Disciplina.objects.filter()
+
+
 class EstagioExtraCurricularForm(forms.ModelForm):
 	
 	YES_OR_NO=[(None,'--------'), (True, 'Sim'), (False, 'Não')]

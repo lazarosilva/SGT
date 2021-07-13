@@ -21,7 +21,11 @@
               <tr>
                 <td>{{ aec.descricao }}</td>
                 <td>{{ aec.tipo }}</td>
-                <td>{{ aec.bolsista }}</td>
+                {% if aec.bolsista %}
+                <td>Sim</td>
+                {% else %}
+                <td>Não</td>
+                {% endif %}
 
                 <td><a href="{% url 'tutoria_atividade_extracurricular_edit' pk=tutoria.id pk_1=aec.pk %}">Editar</a></td>
                 <td><a href="{% url 'tutoria_atividade_extracurricular_remove' pk=tutoria.id pk_1=aec.pk %}">Excluir</a></td>
